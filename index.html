@@ -3,28 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="kosi — web developer, minimalist builder, curious creator" />
+  <meta name="description" content="kosi — Zimbabwean web developer, builder of Dragoon, founder of a design agency" />
   <meta name="theme-color" content="#0a0a0a" />
   
   <!-- SEO & Social Sharing -->
-  <title>kosi · web developer</title>
-  <meta property="og:title" content="kosi · web developer" />
-  <meta property="og:description" content="Building delightful web experiences with code & care." />
+  <title>kosi · zimbabwean developer</title>
+  <meta property="og:title" content="kosi · building from Zimbabwe 🇿🇼" />
+  <meta property="og:description" content="Crafting Dragoon bot & launching a web design agency. Clean code, bold ideas." />
   <meta property="og:image" content="https://yourdomain.com/og-image.png" />
   <meta property="og:url" content="https://yourdomain.com" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👨‍💻</text></svg>" />
+  
+  <!-- Favicon: Zimbabwe flag emoji as SVG -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇿🇼</text></svg>" />
 
   <style>
     /* =========================================================
        1. CSS VARIABLES & THEME CONFIGURATION
-       Change these to match your personal brand colors.
+       Colors inspired by Zimbabwe's flag + modern dev aesthetic
        ========================================================= */
     :root {
       /* Dark theme (default) */
       --bg: #0a0a0a;
       --fg: #ededed;
       --muted: #888888;
-      --accent: #7c3aed;
+      --accent: #00a651; /* Zimbabwe green */
+      --accent-secondary: #fcd116; /* Zimbabwe yellow */
       --border: #222222;
       --hover-bg: #1a1a1a;
       --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -39,18 +42,20 @@
       --bg: #fafafa;
       --fg: #111111;
       --muted: #666666;
-      --accent: #6366f1;
+      --accent: #007a3d; /* darker green for contrast */
+      --accent-secondary: #d4af37; /* muted gold */
       --border: #e5e5e5;
       --hover-bg: #f0f0f0;
     }
 
-    /* Respect system preference if no manual override exists */
+    /* Respect system preference if no manual override */
     @media (prefers-color-scheme: light) {
       html:not([data-theme]) {
         --bg: #fafafa;
         --fg: #111111;
         --muted: #666666;
-        --accent: #6366f1;
+        --accent: #007a3d;
+        --accent-secondary: #d4af37;
         --border: #e5e5e5;
         --hover-bg: #f0f0f0;
       }
@@ -73,10 +78,9 @@
       padding: var(--spacing);
       transition: background var(--transition), color var(--transition);
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Accessibility: Skip link for keyboard navigation */
+    /* Accessibility: Skip link */
     .skip-link {
       position: absolute; top: -40px; left: 0;
       background: var(--accent); color: #fff;
@@ -93,7 +97,17 @@
       font-size: clamp(1.75rem, 5vw, 2.25rem);
       font-weight: 800; letter-spacing: -0.03em;
     }
-    .subtitle { color: var(--muted); margin-top: 0.25rem; font-size: 0.95rem; }
+    .subtitle { 
+      color: var(--muted); 
+      margin-top: 0.25rem; 
+      font-size: 0.95rem;
+    }
+    .location-badge {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      background: var(--border); padding: 0.2rem 0.6rem;
+      border-radius: var(--radius); font-size: 0.8rem;
+      margin-top: 0.5rem; color: var(--fg);
+    }
 
     section {
       margin: 2.5rem 0;
@@ -123,9 +137,24 @@
     .ext-icon { font-size: 0.85em; opacity: 0.6; margin-left: 3px; }
 
     .projects-grid { display: grid; gap: 1.25rem; }
-    .project-card { padding: 0.5rem 0; }
+    .project-card { 
+      padding: 0.5rem 0; 
+      border-left: 2px solid var(--border);
+      padding-left: 1rem;
+      transition: border-color var(--transition);
+    }
+    .project-card:hover { border-left-color: var(--accent); }
+    
     .project-title { font-weight: 600; display: inline-block; margin-bottom: 0.25rem; }
     .project-desc { color: var(--muted); font-size: 0.95rem; margin: 0.25rem 0 0.5rem; }
+    .project-status {
+      font-size: 0.8rem; color: var(--accent-secondary);
+      margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.3rem;
+    }
+    .status-dot { 
+      display: inline-block; width: 6px; height: 6px; 
+      background: var(--accent-secondary); border-radius: 50%; 
+    }
 
     .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
     .badge {
@@ -136,6 +165,23 @@
       transition: border-color var(--transition);
     }
     .badge:hover { border-color: var(--accent); }
+    .badge.agency { background: var(--accent); color: #000; }
+
+    /* Agency highlight section */
+    .agency-cta {
+      background: linear-gradient(135deg, var(--border), var(--hover-bg));
+      padding: 1rem; border-radius: var(--radius);
+      margin-top: 1rem; border: 1px solid var(--accent);
+    }
+    .agency-cta h3 { font-size: 1rem; margin-bottom: 0.5rem; }
+    .agency-cta p { font-size: 0.9rem; color: var(--muted); margin-bottom: 0.75rem; }
+    .cta-btn {
+      display: inline-block; background: var(--accent); color: #000;
+      padding: 0.4rem 0.8rem; border-radius: var(--radius);
+      font-weight: 600; font-size: 0.9rem; text-decoration: none;
+      transition: opacity var(--transition);
+    }
+    .cta-btn:hover { opacity: 0.9; }
 
     /* =========================================================
        5. STATUS SECTION & FOOTER
@@ -162,6 +208,15 @@
     .theme-btn:hover { background: var(--hover-bg); border-color: var(--accent); }
     .theme-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
+    /* Zimbabwe flag accent bar (subtle) */
+    .flag-bar {
+      height: 3px; background: linear-gradient(90deg, 
+        #007a3d 25%, #fcd116 25%, #fcd116 50%, 
+        #000 50%, #000 75%, #e11c26 75%);
+      margin: 1.5rem 0; border-radius: 2px;
+      opacity: 0.7;
+    }
+
     /* =========================================================
        6. RESPONSIVE & ACCESSIBILITY
        ========================================================= */
@@ -170,7 +225,6 @@
       footer { flex-direction: column; align-items: flex-start; }
     }
 
-    /* Respect user motion preferences */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -180,7 +234,7 @@
       }
     }
 
-    /* Easter egg animation (Konami code) */
+    /* Easter egg animation */
     @keyframes hue-rotate { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
     .rainbow-mode { animation: hue-rotate 3s linear infinite; }
   </style>
@@ -193,126 +247,162 @@
     <!-- HERO SECTION -->
     <header class="hero">
       <h1>kosi</h1>
-      <p class="subtitle">web developer · minimalist · curious builder</p>
+      <p class="subtitle">web developer · bot builder · agency founder</p>
+      <div class="location-badge">🇿🇼 Harare, Zimbabwe</div>
     </header>
 
-    <!-- ABOUT / INTERESTS -->
+    <!-- Subtle Zimbabwe flag accent -->
+    <div class="flag-bar" aria-hidden="true"></div>
+
+    <!-- ABOUT / CURRENT FOCUS -->
     <section id="about">
-      <h2>i'm kosi</h2>
+      <h2>what i'm building</h2>
       <ul>
-        <li>• Building delightful web experiences with clean code</li>
-        <li>• Experimenting with WebSockets & real-time interfaces</li>
-        <li>• Curating lo-fi beats for deep work sessions 🎧</li>
-        <li>• Exploring minimalist UI & Latvian design aesthetics 🇱🇻</li>
+        <li>• <strong>Dragoon</strong> — a powerful, privacy-first Discord bot for communities</li>
+        <li>• Launching a <strong>web design agency</strong> focused on African startups</li>
+        <li>• Crafting minimalist, performant websites with vanilla code</li>
+        <li>• Advocating for developer tools that work offline & on low bandwidth 🌍</li>
       </ul>
     </section>
 
-    <!-- SOCIAL LINKS -->
+    <!-- SOCIAL & CONTACT -->
     <section id="links">
-      <h2>where to find me</h2>
+      <h2>connect</h2>
       <ul>
-        <li><a href="https://github.com/isthatkosi" target="_blank" rel="noopener">GitHub <span class="ext-icon">↗</span></a></li>
+        <li><a href="https://github.com/planetkosi" target="_blank" rel="noopener">GitHub: @planetkosi <span class="ext-icon">↗</span></a></li>
+        <li><a href="mailto:hello@kosi.dev">Email: hello@kosi.dev <span class="ext-icon">↗</span></a></li>
         <li><a href="https://twitter.com/isthatkosi" target="_blank" rel="noopener">Twitter / X <span class="ext-icon">↗</span></a></li>
-        <li><a href="https://linkedin.com/in/kosi" target="_blank" rel="noopener">LinkedIn <span class="ext-icon">↗</span></a></li>
-        <li><a href="mailto:hello@kosi.dev">Email <span class="ext-icon">↗</span></a></li>
+        <li><a href="#" id="agency-link">Web Agency (coming soon) <span class="ext-icon">↗</span></a></li>
       </ul>
     </section>
 
     <!-- PROJECTS -->
     <section id="projects">
-      <h2>what i've made</h2>
+      <h2>featured work</h2>
       <div class="projects-grid">
         
+        <!-- DRAGOON BOT - PRIMARY PROJECT -->
         <article class="project-card">
-          <a href="https://github.com/isthatkosi/hostility" target="_blank" rel="noopener" class="project-title">Hostility</a>
-          <p class="project-desc">Discord moderation bot with real-time logging & clean CLI</p>
+          <div class="project-status"><span class="status-dot"></span> in active development</div>
+          <a href="https://github.com/planetkosi/dragoon" target="_blank" rel="noopener" class="project-title">Dragoon</a>
+          <p class="project-desc">A next-gen Discord bot built for security, speed, and simplicity. Featuring auto-moderation, analytics, and custom commands — all with zero bloat.</p>
           <div class="tags">
             <span class="badge">TypeScript</span>
             <span class="badge">Discord.js</span>
-            <span class="badge">PostgreSQL</span>
+            <span class="badge">SQLite</span>
+            <span class="badge">Zimbabwe 🇿🇼</span>
           </div>
         </article>
 
+        <!-- WEB AGENCY - SECONDARY PROJECT -->
         <article class="project-card">
-          <a href="https://viewsy.kosi.dev" target="_blank" rel="noopener" class="project-title">Viewsy</a>
-          <p class="project-desc">Lightweight analytics dashboard for social content creators</p>
+          <div class="project-status"><span class="status-dot"></span> launching soon</div>
+          <span class="project-title">Web Design Agency</span>
+          <p class="project-desc">A boutique agency helping African startups and creators launch fast, beautiful, accessible websites. No templates. No fluff.</p>
           <div class="tags">
+            <span class="badge agency">Agency</span>
             <span class="badge">Vanilla JS</span>
-            <span class="badge">CSS Variables</span>
-            <span class="badge">Supabase</span>
+            <span class="badge">Performance-First</span>
+          </div>
+          <div class="agency-cta">
+            <h3>Interested in working together?</h3>
+            <p>Get early access to our launch list or inquire about custom projects.</p>
+            <a href="mailto:agency@kosi.dev?subject=Agency Inquiry" class="cta-btn">Get in touch</a>
           </div>
         </article>
 
-        <!-- COPY/PASTE TO ADD MORE PROJECTS -->
-        <!-- <article class="project-card">
+        <!-- PERSONAL SITE / PORTFOLIO -->
+        <article class="project-card">
+          <a href="https://planetkosi.github.io" target="_blank" rel="noopener" class="project-title">planetkosi.dev</a>
+          <p class="project-desc">This portfolio — built with 100% vanilla HTML/CSS/JS. No frameworks. No build step. Just clean, semantic code.</p>
+          <div class="tags">
+            <span class="badge">HTML5</span>
+            <span class="badge">CSS Variables</span>
+            <span class="badge">Vanilla JS</span>
+          </div>
+        </article>
+
+        <!-- TEMPLATE FOR FUTURE PROJECTS -->
+        <!-- 
+        <article class="project-card">
+          <div class="project-status"><span class="status-dot"></span> status</div>
           <a href="#" target="_blank" rel="noopener" class="project-title">Project Name</a>
-          <p class="project-desc">Brief description of what it does and why you built it.</p>
+          <p class="project-desc">Brief description focused on impact and tech.</p>
           <div class="tags">
             <span class="badge">Tech 1</span><span class="badge">Tech 2</span>
           </div>
-        </article> -->
+        </article>
+        -->
 
       </div>
     </section>
 
-    <!-- LIVE STATUS / NOW -->
+    <!-- LIVE STATUS / BUILD LOG -->
     <section id="now">
-      <h2>currently</h2>
+      <h2>building now</h2>
       <div id="status-container">
-        <p class="status-loading">Fetching status...</p>
+        <p class="status-loading">Loading build log...</p>
       </div>
     </section>
 
     <!-- FOOTER -->
     <footer>
-      <p>built with vanilla html/css/js · deployed on cloudflare pages</p>
+      <p>crafted in Zimbabwe 🇿🇼 · vanilla code only</p>
       <p>© <span id="year"></span> kosi</p>
-      <button id="theme-toggle" class="theme-btn" aria-label="Toggle dark/light theme" title="Press T to toggle">◑</button>
+      <button id="theme-toggle" class="theme-btn" aria-label="Toggle theme" title="Press T to toggle">◑</button>
     </footer>
   </main>
 
   <script>
     /* =========================================================
-       VANILLA JS LOGIC
-       All features are wrapped in an IIFE to avoid global scope pollution.
+       VANILLA JS — PERSONALIZED FOR KOSI / PLANETKOSI
+       All code wrapped in IIFE to avoid global scope pollution.
+       Features: theme toggle, status fetch, keyboard shortcuts, easter egg.
        ========================================================= */
     (function() {
       'use strict';
 
-      // 1. Dynamic Year for Footer
+      // 1. DYNAMIC YEAR IN FOOTER
       document.getElementById('year').textContent = new Date().getFullYear();
 
-      // 2. THEME TOGGLE SYSTEM
-      // Checks localStorage first, falls back to system preference
+      // 2. THEME TOGGLE WITH LOCALSTORAGE + SYSTEM PREFERENCE
       const root = document.documentElement;
       const themeBtn = document.getElementById('theme-toggle');
       
       function applyTheme(theme) {
         root.setAttribute('data-theme', theme);
         localStorage.setItem('theme', theme);
+        // Update meta theme-color for mobile browsers
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', 
+          theme === 'dark' ? '#0a0a0a' : '#fafafa');
       }
 
-      // Initialize theme
-      const saved = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (saved) applyTheme(saved);
-      else if (!prefersDark) applyTheme('light'); // Default to dark if system prefers it, or vice versa
+      // Initialize: check saved preference or system default
+      const savedTheme = localStorage.getItem('theme');
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      
+      if (savedTheme) {
+        applyTheme(savedTheme);
+      } else if (!systemPrefersDark) {
+        applyTheme('light'); // Default to light if system prefers it
+      } // else stays dark (default)
 
+      // Toggle handler
       themeBtn.addEventListener('click', () => {
         const current = root.getAttribute('data-theme');
         applyTheme(current === 'dark' ? 'light' : 'dark');
       });
 
-      // Listen for system theme changes (if user hasn't manually set one)
+      // Listen for system theme changes (only if user hasn't manually set one)
       window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
         if (!localStorage.getItem('theme')) {
           applyTheme(e.matches ? 'dark' : 'light');
         }
       });
 
-      // 3. KEYBOARD SHORTCUT (T for Theme Toggle)
+      // 3. KEYBOARD SHORTCUT: "T" TO TOGGLE THEME
       document.addEventListener('keydown', (e) => {
-        // Ignore if user is typing in an input or textarea
+        // Ignore if typing in form fields
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
         if (e.key.toLowerCase() === 't') {
           e.preventDefault();
@@ -320,49 +410,90 @@
         }
       });
 
-      // 4. PERSONAL STATUS API FETCH
-      // Replace the URL with your own backend, GitHub Gist, or static JSON file
-      const STATUS_URL = 'https://jsonplaceholder.typicode.com/posts/1'; // Demo fallback
+      // 4. PERSONAL STATUS / BUILD LOG FETCH
+      // Replace with your actual endpoint (GitHub Gist, Vercel Edge Function, etc.)
+      const STATUS_ENDPOINT = 'https://api.github.com/repos/planetkosi/dragoon/commits?per_page=1';
       
-      async function loadStatus() {
+      async function loadBuildStatus() {
         const container = document.getElementById('status-container');
+        
         try {
-          const res = await fetch(STATUS_URL);
-          if (!res.ok) throw new Error('Network response failed');
-          const data = await res.json();
+          const res = await fetch(STATUS_ENDPOINT);
+          if (!res.ok) throw new Error('Status fetch failed');
+          const commits = await res.json();
           
-          // Map demo data to your structure (replace with your actual API shape)
-          const statusText = data.title || 'building portfolio v1 ✨';
+          if (commits[0]) {
+            const latest = commits[0];
+            const message = latest.commit.message.split('\n')[0];
+            const time = new Date(latest.commit.author.date).toLocaleTimeString([], {
+              hour: '2-digit', minute: '2-digit', hour12: true
+            });
+            
+            container.innerHTML = `
+              <p><span class="status-dot"></span> Dragoon: ${message}</p>
+              <p style="color:var(--muted); font-size:0.85em; margin-top:0.25rem">
+                last commit: ${time} · <a href="${latest.html_url}" target="_blank" rel="noopener" style="color:var(--accent)">view on GitHub</a>
+              </p>
+            `;
+          } else {
+            throw new Error('No commits found');
+          }
+        } catch (err) {
+          // Fallback content when API is unavailable
           container.innerHTML = `
-            <p><span class="status-dot"></span> ${statusText}</p>
+            <p>🔧 Refining Dragoon's command parser</p>
             <p style="color:var(--muted); font-size:0.85em; margin-top:0.25rem">
-              last updated: ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+              next: agency landing page + client onboarding flow
             </p>
           `;
-        } catch (err) {
-          container.innerHTML = `<p>🚧 crafting new experiments</p>`;
-          console.warn('Status fetch failed:', err);
+          console.log('Using fallback status (API offline or rate-limited)');
         }
       }
-      loadStatus();
+      
+      // Only fetch if container exists
+      if (document.getElementById('status-container')) {
+        loadBuildStatus();
+        // Refresh status every 10 minutes (GitHub API friendly)
+        setInterval(loadBuildStatus, 10 * 60 * 1000);
+      }
 
-      // 5. KONAMI CODE EASTER EGG
-      // ↑↑↓↓←→←→BA
-      const konamiSequence = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
-      let konamiPos = 0;
+      // 5. AGENCY LINK HANDLER (prevent default if not ready)
+      const agencyLink = document.getElementById('agency-link');
+      if (agencyLink) {
+        agencyLink.addEventListener('click', (e) => {
+          // If agency isn't live yet, show friendly message
+          if (agencyLink.href === window.location.href + '#') {
+            e.preventDefault();
+            alert('🚧 Agency site launching soon!\n\nIn the meantime, email agency@kosi.dev to join the waitlist.');
+          }
+        });
+      }
+
+      // 6. KONAMI CODE EASTER EGG: ↑↑↓↓←→←→BA
+      // Unlocks a subtle Zimbabwe flag animation
+      const konami = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+      let pos = 0;
 
       document.addEventListener('keydown', (e) => {
-        if (e.key === konamiSequence[konamiPos]) {
-          konamiPos++;
-          if (konamiPos === konamiSequence.length) {
+        if (e.key === konami[pos]) {
+          pos++;
+          if (pos === konami.length) {
             document.body.classList.toggle('rainbow-mode');
-            console.log('🎮 Easter egg toggled! Press Konami again to remove.');
-            konamiPos = 0;
+            const flag = document.querySelector('.flag-bar');
+            if (flag) flag.style.opacity = flag.style.opacity === '1' ? '0.7' : '1';
+            console.log('🇿🇼 Zimbabwe mode toggled! Press Konami again to revert.');
+            pos = 0;
           }
         } else {
-          konamiPos = 0; // Reset on wrong key
+          pos = 0; // Reset on wrong key
         }
       });
+
+      // 7. PERFORMANCE: Preconnect to GitHub API for faster status fetch
+      const preconnect = document.createElement('link');
+      preconnect.rel = 'preconnect';
+      preconnect.href = 'https://api.github.com';
+      document.head.appendChild(preconnect);
 
     })();
   </script>
