@@ -5,540 +5,278 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="kosi — Zimbabwean web developer, creator of Dragoon bot" />
   <meta name="theme-color" content="#0a0a0a" />
-  
-  <!-- SEO & Social Sharing -->
   <title>kosi · zimbabwean developer</title>
   <meta property="og:title" content="kosi · building Dragoon from Zimbabwe 🇿🇼" />
   <meta property="og:description" content="Crafting Dragoon: a powerful Discord bot. Clean vanilla code, bold ideas." />
   <meta property="og:image" content="resources/image.png" />
   <meta property="og:url" content="https://yourdomain.com" />
-  
-  <!-- Favicon from your resources folder -->
   <link rel="icon" type="image/svg+xml" href="resources/icon.svg">
   <link rel="apple-touch-icon" href="resources/icon.svg">
 
   <style>
-    /* =========================================================
-       1. CSS VARIABLES & THEME CONFIGURATION
-       Zimbabwe-inspired colors + modern card aesthetic
-       ========================================================= */
     :root {
-      /* Dark theme (default) */
-      --bg: #0a0a0a;
-      --bg-card: #111111;
-      --fg: #ededed;
-      --muted: #888888;
-      --accent: #00a651; /* Zimbabwe green */
-      --accent-secondary: #fcd116; /* Zimbabwe yellow */
-      --border: #222222;
-      --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-      --shadow-hover: 0 8px 30px rgba(0, 166, 81, 0.25);
+      --bg: #0a0a0a; --bg-card: #111111; --fg: #ededed; --muted: #888888;
+      --accent: #00a651; --accent-secondary: #fcd116; --border: #222222;
+      --shadow: 0 8px 32px rgba(0,0,0,0.4); --shadow-hover: 0 12px 40px rgba(0,166,81,0.25);
       --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      --max-width: 720px;
-      --spacing: 2rem;
-      --radius: 12px;
-      --radius-sm: 8px;
+      --max-width: 1100px; --spacing: 2rem; --radius: 14px; --radius-sm: 8px;
       --transition: 0.25s ease;
     }
-
-    /* Light theme override */
     [data-theme="light"] {
-      --bg: #fafafa;
-      --bg-card: #ffffff;
-      --fg: #111111;
-      --muted: #666666;
-      --accent: #007a3d;
-      --accent-secondary: #d4af37;
-      --border: #e5e5e5;
-      --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      --shadow-hover: 0 8px 30px rgba(0, 122, 61, 0.2);
+      --bg: #fafafa; --bg-card: #ffffff; --fg: #111111; --muted: #666666;
+      --accent: #007a3d; --accent-secondary: #d4af37; --border: #e5e5e5;
+      --shadow: 0 8px 32px rgba(0,0,0,0.08); --shadow-hover: 0 12px 40px rgba(0,122,61,0.2);
     }
+    @media (prefers-color-scheme: light) { html:not([data-theme]) { --bg:#fafafa;--bg-card:#fff;--fg:#111;--muted:#666;--accent:#007a3d;--accent-secondary:#d4af37;--border:#e5e5e5;--shadow:0 8px 32px rgba(0,0,0,0.08);--shadow-hover:0 12px 40px rgba(0,122,61,0.2); } }
 
-    /* Respect system preference if no manual override */
-    @media (prefers-color-scheme: light) {
-      html:not([data-theme]) {
-        --bg: #fafafa; --bg-card: #ffffff; --fg: #111111; --muted: #666666;
-        --accent: #007a3d; --accent-secondary: #d4af37;
-        --border: #e5e5e5;
-        --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        --shadow-hover: 0 8px 30px rgba(0, 122, 61, 0.2);
-      }
-    }
-
-    /* =========================================================
-       2. RESET & BASE STYLES
-       ========================================================= */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    
     body {
-      background: var(--bg);
-      color: var(--fg);
-      font-family: var(--font-mono);
-      font-size: 1rem;
-      line-height: 1.6;
-      max-width: var(--max-width);
-      margin: 0 auto;
-      padding: var(--spacing);
-      transition: background var(--transition), color var(--transition);
+      background: var(--bg); color: var(--fg); font-family: var(--font-mono);
+      font-size: 1rem; line-height: 1.6; max-width: var(--max-width); margin: 0 auto;
+      padding: var(--spacing); transition: background var(--transition), color var(--transition);
       -webkit-font-smoothing: antialiased;
     }
+    .skip-link { position:absolute; top:-40px; left:0; background:var(--accent); color:#fff; padding:0.5rem 1rem; z-index:100; border-radius:var(--radius-sm); transition:top 0.2s; }
+    .skip-link:focus { top:0; outline:2px solid var(--accent); outline-offset:2px; }
 
-    /* Accessibility: Skip link */
-    .skip-link {
-      position: absolute; top: -40px; left: 0;
-      background: var(--accent); color: #fff;
-      padding: 0.5rem 1rem; z-index: 100;
-      transition: top 0.2s; border-radius: var(--radius-sm);
+    /* HERO */
+    .hero-banner {
+      position: relative; min-height: clamp(380px, 40vh, 480px);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; border-radius: var(--radius); margin-bottom: 2rem; background: var(--bg);
     }
-    .skip-link:focus { top: 0; outline: 2px solid var(--accent); outline-offset: 2px; }
+    .hero-bg {
+      position: absolute; inset: -20%; z-index: 1;
+      background: radial-gradient(600px circle at 20% 30%, rgba(0,166,81,0.35), transparent 60%),
+                  radial-gradient(500px circle at 80% 70%, rgba(252,209,22,0.3), transparent 60%),
+                  radial-gradient(400px circle at 50% 40%, rgba(99,102,241,0.25), transparent 70%);
+      animation: heroFloat 20s ease-in-out infinite alternate; filter: blur(60px);
+    }
+    @keyframes heroFloat { 0% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-20px, 15px) scale(1.05); } 100% { transform: translate(15px, -10px) scale(0.95); } }
+    .hero-grid { position: absolute; inset: 0; z-index: 2; background-image: radial-gradient(var(--muted) 1px, transparent 1px); background-size: 28px 28px; opacity: 0.12; pointer-events: none; }
+    .hero-spotlight { position: absolute; inset: 0; z-index: 3; pointer-events: none; background: radial-gradient(450px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0,166,81,0.2), transparent 75%); mix-blend-mode: screen; opacity: 0; transition: opacity 0.3s; }
+    .hero-banner:hover .hero-spotlight { opacity: 1; }
+    .hero-content {
+      position: relative; z-index: 4; text-align: center; padding: 2.5rem 2rem; max-width: 520px;
+      background: rgba(17, 17, 17, 0.55); backdrop-filter: blur(16px) saturate(1.4); -webkit-backdrop-filter: blur(16px) saturate(1.4);
+      border: 1px solid rgba(255, 255, 255, 0.08); border-radius: calc(var(--radius) * 1.2);
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.35); animation: panelFloat 6s ease-in-out infinite alternate;
+    }
+    @media (prefers-color-scheme: light), [data-theme="light"] { .hero-content { background: rgba(255, 255, 255, 0.65); border-color: rgba(0,0,0,0.08); box-shadow: 0 12px 48px rgba(0,0,0,0.12); } }
+    @keyframes panelFloat { 0% { transform: translateY(0); } 100% { transform: translateY(-6px); } }
 
-    /* =========================================================
-       3. HEADER (NOT IN CARD) - Profile Image + Name + Country
-       ========================================================= */
-    header.hero {
-      text-align: center;
-      padding: 2rem 1rem 1.5rem;
-      margin-bottom: 1rem;
-    }
-    
-    /* Updated for actual image file */
-    .avatar {
-      width: 96px; height: 96px;
-      border-radius: 50%;
-      margin: 0 auto 1rem;
-      display: block;
-      object-fit: cover;
-      border: 3px solid var(--bg-card);
-      box-shadow: var(--shadow);
-      background: var(--bg-card); /* Fallback while loading */
-      transition: transform var(--transition), box-shadow var(--transition);
-    }
-    .avatar:hover {
-      transform: scale(1.05);
-      box-shadow: var(--shadow-hover);
-    }
-    
-    header.hero h1 {
-      font-size: clamp(1.75rem, 5vw, 2.25rem);
-      font-weight: 800; letter-spacing: -0.03em;
-      margin-bottom: 0.25rem;
-    }
-    
-    .subtitle {
-      color: var(--muted);
-      font-size: 0.95rem;
-      margin-bottom: 0.75rem;
-    }
-    
-    .location-badge {
-      display: inline-flex; align-items: center; gap: 0.4rem;
-      background: var(--bg-card);
-      padding: 0.35rem 0.85rem;
-      border-radius: 50px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-    }
+    .avatar { width: 112px; height: 112px; border-radius: 50%; margin: 0 auto 1.25rem; display: block; object-fit: cover; border: 3px solid var(--bg-card); box-shadow: var(--shadow); background: var(--bg-card); transition: transform var(--transition), box-shadow var(--transition); }
+    .avatar:hover { transform: scale(1.05) rotate(2deg); box-shadow: var(--shadow-hover); }
+    .hero-content h1 { font-size: clamp(2rem, 6vw, 2.75rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.35rem; }
+    .hero-content .subtitle { color: var(--muted); font-size: 1rem; margin-bottom: 1rem; }
+    .location-badge { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--bg-card); padding: 0.4rem 0.95rem; border-radius: 50px; font-size: 0.85rem; font-weight: 500; border: 1px solid var(--border); box-shadow: var(--shadow); transition: transform 0.2s; cursor: default; }
+    .location-badge:hover { transform: scale(1.03); }
+    .nav-links { margin-top: 1.25rem; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+    .nav-links a { color: var(--accent); font-weight: 500; text-decoration: none; border-bottom: 1px dashed var(--accent); padding-bottom: 2px; }
 
-    /* Subtle Zimbabwe flag accent bar */
-    .flag-bar {
-      height: 3px;
-      background: linear-gradient(90deg, 
-        #007a3d 25%, #fcd116 25%, #fcd116 50%, 
-        #000 50%, #000 75%, #e11c26 75%);
-      margin: 0 auto 2rem;
-      border-radius: 2px;
-      opacity: 0.8;
-      max-width: 200px;
-    }
+    .flag-bar { height: 3px; width: 140px; margin: 0 auto 2.5rem; border-radius: 2px; opacity: 0.8; background: linear-gradient(90deg, #007a3d 25%, #fcd116 25%, #fcd116 50%, #000 50%, #000 75%, #e11c26 75%); }
 
-    /* =========================================================
-       4. CARD SYSTEM - Reusable Component Styles
-       ========================================================= */
+    /* BENTO GRID & CARDS */
+    .bento-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1.25rem; perspective: 1000px; }
     .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.25rem;
-      margin-bottom: 1.5rem;
-      box-shadow: var(--shadow);
-      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+      grid-column: span 12; background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow);
+      position: relative; overflow: hidden; transform-style: preserve-3d; will-change: transform;
+      transition: border-color var(--transition), box-shadow var(--transition), transform 0.15s ease;
     }
-    .card:hover {
-      border-color: var(--accent);
-      box-shadow: var(--shadow-hover);
-    }
-    .card-header {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 0.75rem; padding-bottom: 0.5rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .card-title {
-      font-size: 1.1rem; font-weight: 600; color: var(--fg);
-      text-transform: lowercase; letter-spacing: 0.02em;
-    }
-    .card-icon {
-      font-size: 1.2rem; opacity: 0.8;
-    }
+    .card:hover { border-color: var(--accent); box-shadow: var(--shadow-hover); }
+    .card::before { content: ''; position: absolute; inset: 0; border-radius: inherit; background: radial-gradient(350px circle at var(--glow-x) var(--glow-y), rgba(0,166,81,0.18) 0%, transparent 70%); opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1; }
+    .card:hover::before { opacity: 1; }
+    .card > * { position: relative; z-index: 2; }
 
-    /* =========================================================
-       5. CONTENT COMPONENTS (Lists, Links, Badges, etc.)
-       ========================================================= */
-    ul { list-style: none; }
-    li { margin: 0.4rem 0; }
+    .card--wide { grid-column: span 8; } .card--narrow { grid-column: span 4; }
+    .card--featured { background: linear-gradient(135deg, var(--bg-card), rgba(0,166,81,0.06)); border-color: var(--accent); }
+    @media (max-width: 860px) { .card--wide, .card--narrow { grid-column: span 12; } }
 
-    a {
-      color: var(--accent); text-decoration: none;
-      border-bottom: 1px solid transparent;
-      transition: border-color var(--transition), color var(--transition);
-    }
-    a:hover { border-bottom-color: var(--accent); }
-    .ext-icon { font-size: 0.85em; opacity: 0.6; margin-left: 3px; }
+    .card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem; padding-bottom:0.5rem; border-bottom:1px solid var(--border); }
+    .card-title { font-size:1.05rem; font-weight:600; color:var(--fg); text-transform:lowercase; letter-spacing:0.02em; }
+    .card-icon { font-size:1.3rem; opacity:0.8; }
 
-    /* Contact buttons */
-    .contact-grid { display: grid; gap: 0.6rem; }
-    .contact-btn {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0.6rem 0.85rem;
-      border-radius: var(--radius-sm);
-      background: var(--bg);
-      border: 1px solid var(--border);
-      color: var(--fg);
-      text-decoration: none;
-      font-weight: 500; font-size: 0.9rem;
-      transition: all var(--transition);
-    }
-    .contact-btn:hover {
-      border-color: var(--accent);
-      transform: translateX(4px);
-    }
-    .contact-btn .label { display: flex; align-items: center; gap: 0.5rem; }
-    .contact-btn .hint {
-      font-size: 0.75rem; color: var(--muted);
-      opacity: 0; transition: opacity 0.2s;
-    }
-    .contact-btn:hover .hint { opacity: 1; }
-    .contact-btn.discord:hover { border-color: #5865F2; }
-    .contact-btn.email:hover { border-color: #ea4335; }
-    .contact-btn.github:hover { border-color: var(--accent); }
+    ul { list-style:none; } li { margin:0.4rem 0; }
+    a { color:var(--accent); text-decoration:none; border-bottom:1px solid transparent; transition:border-color var(--transition), color var(--transition); }
+    a:hover { border-bottom-color:var(--accent); }
 
-    /* Project cards */
-    .projects-grid { display: grid; gap: 1rem; }
-    .project-card {
-      border-left: 3px solid var(--border);
-      padding-left: 1rem;
-      transition: border-color var(--transition);
-    }
-    .project-card:hover { border-left-color: var(--accent); }
-    
-    .project-title { font-weight: 600; display: inline-block; margin-bottom: 0.25rem; }
-    .project-desc { color: var(--muted); font-size: 0.95rem; margin: 0.25rem 0 0.5rem; }
-    
-    .project-status {
-      font-size: 0.8rem; color: var(--accent-secondary);
-      margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.3rem;
-    }
-    .status-dot { 
-      display: inline-block; width: 6px; height: 6px; 
-      background: var(--accent-secondary); border-radius: 50%; 
-    }
+    .contact-grid { display:grid; gap:0.5rem; }
+    .contact-btn { display:flex; align-items:center; justify-content:space-between; padding:0.65rem 0.85rem; border-radius:var(--radius-sm); background:var(--bg); border:1px solid var(--border); color:var(--fg); text-decoration:none; font-weight:500; font-size:0.9rem; transition:all var(--transition); }
+    .contact-btn:hover { border-color:var(--accent); transform:translateX(4px); }
+    .contact-btn .label { display:flex; align-items:center; gap:0.5rem; }
+    .contact-btn .hint { font-size:0.75rem; color:var(--muted); opacity:0; transition:opacity 0.2s; }
+    .contact-btn:hover .hint { opacity:1; }
+    .contact-btn.discord:hover { border-color:#5865F2; }
 
-    .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-    .badge {
-      background: var(--border); color: var(--fg);
-      padding: 0.2rem 0.6rem; border-radius: var(--radius-sm);
-      font-size: 0.75rem; font-weight: 500;
-      border: 1px solid transparent; transition: border-color var(--transition);
-    }
-    .badge:hover { border-color: var(--accent); }
-    .badge.discord { background: #5865F2; color: #fff; border-color: #5865F2; }
+    .projects-grid { display:grid; gap:1rem; }
+    .project-card { border-left:3px solid var(--border); padding-left:1rem; transition:border-color var(--transition); cursor:pointer; }
+    .project-card:hover { border-left-color:var(--accent); }
+    .project-title { font-weight:600; display:inline-block; margin-bottom:0.25rem; }
+    .project-desc { color:var(--muted); font-size:0.95rem; margin:0.25rem 0 0.5rem; }
+    .project-status { font-size:0.8rem; color:var(--accent-secondary); margin-bottom:0.4rem; display:flex; align-items:center; gap:0.3rem; }
+    .status-dot { display:inline-block; width:6px; height:6px; background:var(--accent-secondary); border-radius:50%; }
+    .tags { display:flex; flex-wrap:wrap; gap:0.4rem; }
+    .badge { background:var(--border); color:var(--fg); padding:0.2rem 0.6rem; border-radius:var(--radius-sm); font-size:0.75rem; font-weight:500; border:1px solid transparent; transition:all var(--transition); }
+    .badge:hover { border-color:var(--accent); transform:scale(1.05); }
+    .project-details { max-height:0; overflow:hidden; transition:max-height 0.4s ease, opacity 0.3s ease; opacity:0; margin-top:0; }
+    .project-card.expanded .project-details { max-height:200px; opacity:1; margin-top:0.75rem; padding-top:0.5rem; border-top:1px dashed var(--border); }
+    .project-details p { font-size:0.9rem; color:var(--muted); line-height:1.5; }
+    .expand-hint { font-size:0.75rem; color:var(--accent); margin-top:0.5rem; display:inline-block; transition:opacity 0.2s; }
+    .project-card:hover .expand-hint { opacity:1; }
 
-    /* Status section */
-    #status-container { min-height: 2.4em; }
-    .status-loading { color: var(--muted); font-style: italic; }
-    .status-dot-large { 
-      display: inline-block; width: 8px; height: 8px; 
-      background: var(--accent); border-radius: 50%; margin-right: 6px; 
-    }
+    #status-container { min-height:2.4em; } .status-loading { color:var(--muted); font-style:italic; }
+    .status-dot-large { display:inline-block; width:8px; height:8px; background:var(--accent); border-radius:50%; margin-right:6px; animation:pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
 
-    /* =========================================================
-       6. FOOTER & THEME TOGGLE
-       ========================================================= */
-    footer {
-      display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 1rem;
-      color: var(--muted); font-size: 0.85rem;
-      padding-top: 1.5rem; margin-top: 1rem;
-      border-top: 1px solid var(--border);
-    }
+    /* FOOTER AS CARD */
+    footer.card { grid-column: span 12; margin-top: 1.5rem; background: var(--bg-card); border: 1px solid var(--border); box-shadow: var(--shadow); padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; color: var(--muted); font-size: 0.85rem; border-radius: var(--radius); }
+    .theme-btn { background:var(--bg); border:1px solid var(--border); color:var(--fg); width:38px; height:38px; border-radius:50%; cursor:pointer; font-size:1.1rem; display:grid; place-items:center; transition:all var(--transition); }
+    .theme-btn:hover { background:var(--accent); border-color:var(--accent); color:#000; transform:rotate(15deg); }
+    .theme-btn:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
 
-    .theme-btn {
-      background: var(--bg-card); border: 1px solid var(--border);
-      color: var(--fg); width: 36px; height: 36px; border-radius: 50%;
-      cursor: pointer; font-size: 1.1rem;
-      display: grid; place-items: center;
-      transition: all var(--transition);
-      box-shadow: var(--shadow);
-    }
-    .theme-btn:hover { 
-      background: var(--accent); border-color: var(--accent); color: #000;
-      transform: rotate(15deg);
-    }
-    .theme-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-
-    /* =========================================================
-       7. RESPONSIVE & ACCESSIBILITY
-       ========================================================= */
-    @media (max-width: 520px) {
-      body { padding: 1.25rem; }
-      header.hero { padding: 1.5rem 0.5rem 1rem; }
-      .avatar { width: 80px; height: 80px; }
-      footer { flex-direction: column; align-items: flex-start; }
-      .contact-grid { grid-template-columns: 1fr; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-      }
-    }
-
-    /* Easter egg animation */
-    @keyframes hue-rotate { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
-    .rainbow-mode { animation: hue-rotate 3s linear infinite; }
+    @media (max-width: 520px) { body { padding:1.25rem; } .hero-banner { min-height: 320px; border-radius: calc(var(--radius) * 0.8); } .hero-content { padding: 1.75rem 1.25rem; } .avatar { width: 88px; height: 88px; } footer.card { flex-direction:column; align-items:flex-start; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important; transform:none !important; } }
+    @keyframes hue-rotate { 0% { filter:hue-rotate(0deg); } 100% { filter:hue-rotate(360deg); } } .rainbow-mode { animation:hue-rotate 3s linear infinite; }
   </style>
 </head>
-
 <body>
   <a href="#main" class="skip-link">Skip to content</a>
 
-  <!-- HEADER (NOT IN CARD) -->
-  <header class="hero">
-    <!-- Profile image from your resources folder -->
-    <img src="resources/image.png" alt="kosi profile picture" class="avatar" loading="lazy">
-    <h1>kosi</h1>
-    <p class="subtitle">web developer · bot builder · vanilla code enthusiast</p>
-    <div class="location-badge">🇿🇼 Zimbabwe</div>
-  </header>
+  <section class="hero-banner" id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-spotlight"></div>
+    <div class="hero-content">
+      <img src="resources/image.png" alt="kosi profile picture" class="avatar" loading="eager">
+      <h1>kosi</h1>
+      <p class="subtitle">web developer · bot builder · vanilla code enthusiast</p>
+      <div class="location-badge">🇿🇼 Zimbabwe</div>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </section>
 
-  <!-- Subtle Zimbabwe flag accent -->
   <div class="flag-bar" aria-hidden="true"></div>
 
   <main id="main">
-    
-    <!-- ABOUT CARD -->
-    <section class="card" id="about">
-      <div class="card-header">
-        <h2 class="card-title">about me</h2>
-        <span class="card-icon">👋</span>
-      </div>
-      <ul>
-        <li>• Building <strong>Dragoon</strong> — a privacy-first Discord bot for communities</li>
-        <li>• Crafting minimalist, performant websites with 100% vanilla code</li>
-        <li>• Advocating for tools that work offline & on low bandwidth 🌍</li>
-        <li>• Building in public from Zimbabwe 🇿🇼</li>
-      </ul>
-    </section>
+    <div class="bento-grid">
+      <section class="card card--wide" id="about">
+        <div class="card-header"><h2 class="card-title">about me</h2><span class="card-icon">👋</span></div>
+        <ul>
+          <li>• Building <strong>Dragoon</strong> — a privacy-first Discord bot for communities</li>
+          <li>• Crafting minimalist, performant websites with 100% vanilla code</li>
+          <li>• Advocating for tools that work offline & on low bandwidth 🌍</li>
+          <li>• Building in public from Zimbabwe 🇿🇼</li>
+        </ul>
+      </section>
 
-    <!-- CONTACT CARD -->
-    <section class="card" id="contact">
-      <div class="card-header">
-        <h2 class="card-title">let's connect</h2>
-        <span class="card-icon">💬</span>
-      </div>
-      <div class="contact-grid">
-        <a href="mailto:planetkosi@gmail.com" class="contact-btn email">
-          <span class="label">✉️ planetkosi@gmail.com</span>
-          <span class="hint">opens mail app</span>
-        </a>
-        <a href="https://discord.com/users/1369005951637655756" target="_blank" rel="noopener" class="contact-btn discord" id="discord-link">
-          <span class="label">💬 Discord: <code>1369005951637655756</code></span>
-          <span class="hint">click to open</span>
-        </a>
-        <a href="https://github.com/planetkosi" target="_blank" rel="noopener" class="contact-btn github">
-          <span class="label">🐙 @planetkosi</span>
-          <span class="hint">view code</span>
-        </a>
-      </div>
-    </section>
+      <section class="card card--wide card--featured" id="projects">
+        <div class="card-header"><h2 class="card-title">featured work</h2><span class="card-icon">🚀</span></div>
+        <div class="projects-grid">
+          <article class="project-card" tabindex="0">
+            <div class="project-status"><span class="status-dot"></span> in active development</div>
+            <a href="https://github.com/planetkosi/dragoon" target="_blank" rel="noopener" class="project-title">Dragoon</a>
+            <p class="project-desc">Next-gen Discord bot: auto-mod, analytics, custom commands. Zero bloat.</p>
+            <div class="tags"><span class="badge">TypeScript</span><span class="badge">Discord.js</span><span class="badge">SQLite</span><span class="badge">🇿🇼</span></div>
+            <div class="project-details"><p>Refactoring permission system & adding webhook integrations. Designed for speed & privacy.</p></div>
+            <span class="expand-hint">click to expand ↓</span>
+          </article>
+          <article class="project-card" tabindex="0">
+            <a href="https://planetkosi.github.io" target="_blank" rel="noopener" class="project-title">planetkosi.dev</a>
+            <p class="project-desc">This portfolio. 100% vanilla. No frameworks. Semantic, fast, accessible.</p>
+            <div class="tags"><span class="badge">HTML5</span><span class="badge">CSS Variables</span><span class="badge">Vanilla JS</span></div>
+            <div class="project-details"><p>Bento-grid layout, cursor-tracking glow, 3D tilt. Optimized for 100/100 Lighthouse.</p></div>
+            <span class="expand-hint">click to expand ↓</span>
+          </article>
+        </div>
+      </section>
 
-    <!-- PROJECTS CARD -->
-    <section class="card" id="projects">
-      <div class="card-header">
-        <h2 class="card-title">featured work</h2>
-        <span class="card-icon">🚀</span>
-      </div>
-      <div class="projects-grid">
-        
-        <!-- DRAGOON BOT - PRIMARY PROJECT -->
-        <article class="project-card">
-          <div class="project-status"><span class="status-dot"></span> in active development</div>
-          <a href="https://github.com/planetkosi/dragoon" target="_blank" rel="noopener" class="project-title">Dragoon</a>
-          <p class="project-desc">A next-gen Discord bot built for security, speed, and simplicity. Featuring auto-moderation, analytics, and custom commands — all with zero bloat.</p>
-          <div class="tags">
-            <span class="badge">TypeScript</span>
-            <span class="badge">Discord.js</span>
-            <span class="badge">SQLite</span>
-            <span class="badge">🇿🇼</span>
-          </div>
-        </article>
+      <section class="card card--narrow" id="now">
+        <div class="card-header"><h2 class="card-title">building now</h2><span class="card-icon">🔧</span></div>
+        <div id="status-container"><p class="status-loading">Fetching Dragoon status...</p></div>
+      </section>
 
-        <!-- PERSONAL SITE / PORTFOLIO -->
-        <article class="project-card">
-          <a href="https://planetkosi.github.io" target="_blank" rel="noopener" class="project-title">planetkosi.dev</a>
-          <p class="project-desc">This portfolio — built with 100% vanilla HTML/CSS/JS. No frameworks. No build step. Just clean, semantic code.</p>
-          <div class="tags">
-            <span class="badge">HTML5</span>
-            <span class="badge">CSS Variables</span>
-            <span class="badge">Vanilla JS</span>
-          </div>
-        </article>
+      <!-- CONTACT CTA (AT THE VERY END) -->
+      <a href="contact.html" class="card card--narrow" id="contact-cta" style="display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; cursor:pointer; text-decoration:none;">
+        <div style="font-size:2.5rem; margin-bottom:0.5rem;">💬</div>
+        <h2 class="card-title" style="margin-bottom:0.25rem;">get in touch</h2>
+        <p style="color:var(--muted); font-size:0.9rem; margin-top:0;">Email, Discord, or quick message.</p>
+        <span style="margin-top:1rem; color:var(--accent); font-weight:500;">visit contact page →</span>
+      </a>
+    </div>
 
-      </div>
-    </section>
-
-    <!-- BUILD STATUS CARD -->
-    <section class="card" id="now">
-      <div class="card-header">
-        <h2 class="card-title">building now</h2>
-        <span class="card-icon">🔧</span>
-      </div>
-      <div id="status-container">
-        <p class="status-loading">Loading Dragoon build log...</p>
-      </div>
-    </section>
-
+    <!-- FOOTER AS CARD -->
+    <footer class="card">
+      <p>crafted in Zimbabwe 🇿🇼 · vanilla code only</p>
+      <p>© <span id="year"></span> kosi</p>
+      <button id="theme-toggle" class="theme-btn" aria-label="Toggle theme" title="Press T to toggle">◑</button>
+    </footer>
   </main>
 
-  <!-- FOOTER -->
-  <footer>
-    <p>crafted in Zimbabwe 🇿🇼 · vanilla code only</p>
-    <p>© <span id="year"></span> kosi</p>
-    <button id="theme-toggle" class="theme-btn" aria-label="Toggle theme" title="Press T to toggle">◑</button>
-  </footer>
-
   <script>
-    /* =========================================================
-       VANILLA JS — PERSONALIZED FOR KOSI / PLANETKOSI
-       Features: theme toggle, GitHub status fetch, Discord UX, easter egg.
-       All code wrapped in IIFE to avoid global scope pollution.
-       ========================================================= */
     (function() {
       'use strict';
-
-      // 1. DYNAMIC YEAR IN FOOTER
       document.getElementById('year').textContent = new Date().getFullYear();
+      const root = document.documentElement; const themeBtn = document.getElementById('theme-toggle');
+      const applyTheme = t => { root.dataset.theme = t; localStorage.setItem('theme', t); document.querySelector('meta[name="theme-color"]')?.setAttribute('content', t==='dark'?'#0a0a0a':'#fafafa'); };
+      const saved = localStorage.getItem('theme');
+      if (saved) applyTheme(saved); else if (!window.matchMedia('(prefers-color-scheme: dark)').matches) applyTheme('light');
+      themeBtn.addEventListener('click', () => applyTheme(root.dataset.theme==='dark'?'light':'dark'));
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => !localStorage.getItem('theme') && applyTheme(e.matches?'dark':'light'));
+      document.addEventListener('keydown', e => e.key.toLowerCase()==='t' && e.target.tagName!=='INPUT' && e.target.tagName!=='TEXTAREA' && (e.preventDefault(), themeBtn.click()));
 
-      // 2. THEME TOGGLE WITH LOCALSTORAGE + SYSTEM PREFERENCE
-      const root = document.documentElement;
-      const themeBtn = document.getElementById('theme-toggle');
-      
-      function applyTheme(theme) {
-        root.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-        const metaTheme = document.querySelector('meta[name="theme-color"]');
-        if (metaTheme) metaTheme.setAttribute('content', theme === 'dark' ? '#0a0a0a' : '#fafafa');
-      }
-
-      const savedTheme = localStorage.getItem('theme');
-      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      
-      if (savedTheme) applyTheme(savedTheme);
-      else if (!systemPrefersDark) applyTheme('light');
-
-      themeBtn.addEventListener('click', () => applyTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
-
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-        if (!localStorage.getItem('theme')) applyTheme(e.matches ? 'dark' : 'light');
-      });
-
-      // 3. KEYBOARD SHORTCUT: "T" TO TOGGLE THEME
-      document.addEventListener('keydown', (e) => {
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-        if (e.key.toLowerCase() === 't') { e.preventDefault(); themeBtn.click(); }
-      });
-
-      // 4. DRAGOON STATUS: Fetch latest commit from GitHub
-      const STATUS_ENDPOINT = `https://api.github.com/repos/planetkosi/dragoon/commits?per_page=1`;
-      
-      async function loadDragoonStatus() {
-        const container = document.getElementById('status-container');
-        try {
-          const res = await fetch(STATUS_ENDPOINT, { headers: { 'Accept': 'application/vnd.github.v3+json' } });
-          if (!res.ok) throw new Error('API failed');
-          const commits = await res.json();
-          
-          if (commits[0]?.commit) {
-            const msg = commits[0].commit.message.split('\n')[0].trim();
-            const author = commits[0].commit.author.name;
-            const time = new Date(commits[0].commit.author.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            container.innerHTML = `
-              <p><span class="status-dot-large"></span> ${escapeHtml(msg)}</p>
-              <p style="color:var(--muted); font-size:0.85em; margin-top:0.25rem">
-                by ${escapeHtml(author)} · ${time} · 
-                <a href="${commits[0].html_url}" target="_blank" rel="noopener" style="color:var(--accent)">view commit</a>
-              </p>
-            `;
-          } else throw new Error('No data');
-        } catch (err) {
-          container.innerHTML = `
-            <p>🔧 Refining Dragoon's command parser & moderation logic</p>
-            <p style="color:var(--muted); font-size:0.85em; margin-top:0.25rem">next: custom command editor + performance optimizations</p>
-          `;
-        }
-      }
-      
-      function escapeHtml(str) { const d = document.createElement('div'); d.textContent = str; return d.innerHTML; }
-      if (document.getElementById('status-container')) { loadDragoonStatus(); setInterval(loadDragoonStatus, 600000); }
-
-      // 5. DISCORD UX: Long-press to copy ID on mobile
-      const discordLink = document.getElementById('discord-link');
-      if (discordLink) {
-        let timer;
-        discordLink.addEventListener('touchstart', (e) => {
-          timer = setTimeout(() => {
-            e.preventDefault();
-            navigator.clipboard?.writeText('1369005951637655756').then(() => {
-              const hint = discordLink.querySelector('.hint');
-              if (hint) { const o = hint.textContent; hint.textContent = '✓ Copied!'; setTimeout(() => hint.textContent = o, 1500); }
-            });
-          }, 800);
+      const hero = document.getElementById('hero');
+      if (hero && !window.matchMedia('(prefers-reduced-motion: reduce)').matches && !('ontouchstart' in window)) {
+        hero.addEventListener('mousemove', e => {
+          const r = hero.getBoundingClientRect();
+          hero.style.setProperty('--mouse-x', `${e.clientX - r.left}px`);
+          hero.style.setProperty('--mouse-y', `${e.clientY - r.top}px`);
         });
-        discordLink.addEventListener('touchend', () => clearTimeout(timer));
-        discordLink.addEventListener('touchcancel', () => clearTimeout(timer));
       }
 
-      // 6. KONAMI CODE EASTER EGG
-      const konami = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
-      let pos = 0;
-      document.addEventListener('keydown', (e) => {
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-        if (e.key === konami[pos]) {
-          pos++;
-          if (pos === konami.length) {
-            document.body.classList.toggle('rainbow-mode');
-            const flag = document.querySelector('.flag-bar');
-            if (flag) flag.style.opacity = flag.style.opacity === '1' ? '0.7' : '1';
-            console.log('🇿🇼 Zimbabwe mode toggled!');
-            pos = 0;
-          }
-        } else pos = 0;
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const isTouch = 'ontouchstart' in window;
+      if (!prefersReduced && !isTouch) {
+        document.querySelectorAll('.card').forEach(card => {
+          card.addEventListener('mousemove', e => {
+            const r = card.getBoundingClientRect(); const x = e.clientX - r.left, y = e.clientY - r.top;
+            const cx = r.width/2, cy = r.height/2; const rx = ((y-cy)/cy)*-4, ry = ((x-cx)/cx)*4;
+            card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) scale3d(1.01,1.01,1.01)`;
+            card.style.setProperty('--glow-x', x+'px'); card.style.setProperty('--glow-y', y+'px');
+          });
+          card.addEventListener('mouseleave', () => { card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) scale3d(1,1,1)'; });
+        });
+      }
+
+      document.querySelectorAll('.project-card').forEach(card => {
+        card.addEventListener('click', () => card.classList.toggle('expanded'));
+        card.addEventListener('keydown', e => e.key==='Enter' && card.classList.toggle('expanded'));
       });
 
-      // 7. PERFORMANCE: Preconnect
-      const pc = document.createElement('link'); pc.rel = 'preconnect'; pc.href = 'https://api.github.com'; document.head.appendChild(pc);
+      const STATUS = 'https://api.github.com/repos/planetkosi/dragoon/commits?per_page=1';
+      async function loadStatus() {
+        const c = document.getElementById('status-container');
+        try {
+          const res = await fetch(STATUS, {headers:{'Accept':'application/vnd.github.v3+json'}});
+          if(!res.ok) throw new Error('fail');
+          const d = (await res.json())[0];
+          if(d?.commit) {
+            const msg = d.commit.message.split('\n')[0].trim();
+            const time = new Date(d.commit.author.date).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+            c.innerHTML = `<p><span class="status-dot-large"></span> ${escapeHtml(msg)}</p><p style="color:var(--muted);font-size:0.85em;margin-top:0.25rem">${escapeHtml(d.commit.author.name)} · ${time}</p>`;
+          } else throw new Error('empty');
+        } catch { c.innerHTML = `<p>🔧 Refining Dragoon's parser</p><p style="color:var(--muted);font-size:0.85em;margin-top:0.25rem">next: command editor</p>`; }
+      }
+      function escapeHtml(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+      if(document.getElementById('status-container')){ loadStatus(); setInterval(loadStatus, 600000); }
 
-      // 8. CARD HOVER LIFT
-      document.querySelectorAll('.card').forEach(c => {
-        c.addEventListener('mouseenter', () => c.style.transform = 'translateY(-2px)');
-        c.addEventListener('mouseleave', () => c.style.transform = 'translateY(0)');
-      });
-
+      const k=['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a']; let p=0;
+      document.addEventListener('keydown', e => { if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA') return; if(e.key===k[p]){p++;if(p===k.length){document.body.classList.toggle('rainbow-mode');p=0;}}else p=0; });
+      const pc=document.createElement('link');pc.rel='preconnect';pc.href='https://api.github.com';document.head.appendChild(pc);
     })();
   </script>
 </body>

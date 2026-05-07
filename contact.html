@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Contact kosi — Zimbabwean developer" />
+  <meta name="theme-color" content="#0a0a0a" />
+  <title>Contact · kosi</title>
+  <link rel="icon" type="image/svg+xml" href="resources/icon.svg">
+  <style>
+    /* (Identical CSS base as index.html for consistency) */
+    :root { --bg:#0a0a0a; --bg-card:#111111; --fg:#ededed; --muted:#888888; --accent:#00a651; --accent-secondary:#fcd116; --border:#222222; --shadow:0 8px 32px rgba(0,0,0,0.4); --font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; --max-width:1100px; --spacing:2rem; --radius:14px; --radius-sm:8px; --transition:0.25s ease; }
+    [data-theme="light"] { --bg:#fafafa; --bg-card:#fff; --fg:#111; --muted:#666; --accent:#007a3d; --accent-secondary:#d4af37; --border:#e5e5e5; --shadow:0 8px 32px rgba(0,0,0,0.08); }
+    @media (prefers-color-scheme: light) { html:not([data-theme]) { --bg:#fafafa;--bg-card:#fff;--fg:#111;--muted:#666;--accent:#007a3d;--accent-secondary:#d4af37;--border:#e5e5e5;--shadow:0 8px 32px rgba(0,0,0,0.08); } }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;} html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--fg);font-family:var(--font-mono);font-size:1rem;line-height:1.6;max-width:var(--max-width);margin:0 auto;padding:var(--spacing);transition:background var(--transition),color var(--transition);-webkit-font-smoothing:antialiased;}
+    .skip-link{position:absolute;top:-40px;left:0;background:var(--accent);color:#fff;padding:0.5rem 1rem;z-index:100;border-radius:var(--radius-sm);transition:top 0.2s;} .skip-link:focus{top:0;outline:2px solid var(--accent);outline-offset:2px;}
+    .hero-banner{position:relative;min-height:clamp(380px,40vh,480px);display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:var(--radius);margin-bottom:2rem;background:var(--bg);}
+    .hero-bg{position:absolute;inset:-20%;z-index:1;background:radial-gradient(600px circle at 20% 30%, rgba(0,166,81,0.35), transparent 60%), radial-gradient(500px circle at 80% 70%, rgba(252,209,22,0.3), transparent 60%), radial-gradient(400px circle at 50% 40%, rgba(99,102,241,0.25), transparent 70%);animation:heroFloat 20s ease-in-out infinite alternate;filter:blur(60px);}
+    @keyframes heroFloat{0%{transform:translate(0,0) scale(1);}50%{transform:translate(-20px,15px) scale(1.05);}100%{transform:translate(15px,-10px) scale(0.95);}}
+    .hero-grid{position:absolute;inset:0;z-index:2;background-image:radial-gradient(var(--muted) 1px, transparent 1px);background-size:28px 28px;opacity:0.12;pointer-events:none;}
+    .hero-spotlight{position:absolute;inset:0;z-index:3;pointer-events:none;background:radial-gradient(450px circle at var(--mouse-x,50%) var(--mouse-y,50%), rgba(0,166,81,0.2), transparent 75%);mix-blend-mode:screen;opacity:0;transition:opacity 0.3s;} .hero-banner:hover .hero-spotlight{opacity:1;}
+    .hero-content{position:relative;z-index:4;text-align:center;padding:2.5rem 2rem;max-width:520px;background:rgba(17,17,17,0.55);backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);border:1px solid rgba(255,255,255,0.08);border-radius:calc(var(--radius)*1.2);box-shadow:0 12px 48px rgba(0,0,0,0.35);animation:panelFloat 6s ease-in-out infinite alternate;}
+    @media(prefers-color-scheme:light),[data-theme="light"]{.hero-content{background:rgba(255,255,255,0.65);border-color:rgba(0,0,0,0.08);box-shadow:0 12px 48px rgba(0,0,0,0.12);}}
+    @keyframes panelFloat{0%{transform:translateY(0);}100%{transform:translateY(-6px);}}
+    .avatar{width:112px;height:112px;border-radius:50%;margin:0 auto 1.25rem;display:block;object-fit:cover;border:3px solid var(--bg-card);box-shadow:var(--shadow);background:var(--bg-card);transition:transform var(--transition),box-shadow var(--transition);} .avatar:hover{transform:scale(1.05) rotate(2deg);}
+    .hero-content h1{font-size:clamp(2rem,6vw,2.75rem);font-weight:800;letter-spacing:-0.03em;margin-bottom:0.35rem;}
+    .hero-content .subtitle{color:var(--muted);font-size:1rem;margin-bottom:1rem;}
+    .nav-links{margin-top:1.25rem;display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;}
+    .nav-links a{color:var(--accent);font-weight:500;text-decoration:none;border-bottom:1px dashed var(--accent);padding-bottom:2px;}
+    .flag-bar{height:3px;width:140px;margin:0 auto 2.5rem;border-radius:2px;opacity:0.8;background:linear-gradient(90deg,#007a3d 25%,#fcd116 25%,#fcd116 50%,#000 50%,#000 75%,#e11c26 75%);}
+    .bento-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:1.25rem;perspective:1000px;}
+    .card{grid-column:span 12;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow);position:relative;overflow:hidden;transform-style:preserve-3d;will-change:transform;transition:border-color var(--transition),box-shadow var(--transition),transform 0.15s ease;}
+    .card:hover{border-color:var(--accent);box-shadow:0 12px 40px rgba(0,166,81,0.25);}
+    .card::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(350px circle at var(--glow-x) var(--glow-y), rgba(0,166,81,0.18) 0%, transparent 70%);opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:1;} .card:hover::before{opacity:1;} .card>*{position:relative;z-index:2;}
+    .card--wide{grid-column:span 8;} .card--narrow{grid-column:span 4;}
+    @media(max-width:860px){.card--wide,.card--narrow{grid-column:span 12;}}
+    .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);}
+    .card-title{font-size:1.05rem;font-weight:600;color:var(--fg);text-transform:lowercase;letter-spacing:0.02em;}
+    .card-icon{font-size:1.3rem;opacity:0.8;}
+    ul{list-style:none;} li{margin:0.4rem 0;} a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color var(--transition),color var(--transition);} a:hover{border-bottom-color:var(--accent);}
+    .contact-btn{display:flex;align-items:center;justify-content:space-between;padding:0.8rem 1rem;border-radius:var(--radius-sm);background:var(--bg);border:1px solid var(--border);color:var(--fg);text-decoration:none;font-weight:500;font-size:0.95rem;transition:all var(--transition);margin-bottom:0.75rem;}
+    .contact-btn:hover{border-color:var(--accent);transform:translateX(4px);} .contact-btn:last-child{margin-bottom:0;}
+    .contact-btn .label{display:flex;align-items:center;gap:0.6rem;} .contact-btn .hint{font-size:0.75rem;color:var(--muted);opacity:0;transition:opacity 0.2s;} .contact-btn:hover .hint{opacity:1;}
+    .contact-btn.discord:hover{border-color:#5865F2;} .contact-btn.email:hover{border-color:#ea4335;}
+    .note-box{margin-top:1.5rem;padding:1rem;background:rgba(0,166,81,0.08);border:1px dashed var(--accent);border-radius:var(--radius-sm);color:var(--muted);font-size:0.9rem;line-height:1.5;}
+    footer.card{grid-column:span 12;margin-top:1.5rem;background:var(--bg-card);border:1px solid var(--border);box-shadow:var(--shadow);padding:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;color:var(--muted);font-size:0.85rem;border-radius:var(--radius);}
+    .theme-btn{background:var(--bg);border:1px solid var(--border);color:var(--fg);width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:1.1rem;display:grid;place-items:center;transition:all var(--transition);} .theme-btn:hover{background:var(--accent);border-color:var(--accent);color:#000;transform:rotate(15deg);} .theme-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+    @media(max-width:520px){body{padding:1.25rem;}.hero-banner{min-height:320px;border-radius:calc(var(--radius)*0.8);}.hero-content{padding:1.75rem 1.25rem;}.avatar{width:88px;height:88px;}footer.card{flex-direction:column;align-items:flex-start;}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;scroll-behavior:auto!important;transform:none!important;}}
+    @keyframes hue-rotate{0%{filter:hue-rotate(0deg);}100%{filter:hue-rotate(360deg);}} .rainbow-mode{animation:hue-rotate 3s linear infinite;}
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <section class="hero-banner" id="hero">
+    <div class="hero-bg"></div><div class="hero-grid"></div><div class="hero-spotlight"></div>
+    <div class="hero-content">
+      <img src="resources/image.png" alt="kosi profile picture" class="avatar" loading="eager">
+      <h1>let's connect</h1>
+      <p class="subtitle">Have a project, question, or just want to say hi?</p>
+      <nav class="nav-links"><a href="index.html">← Back to Home</a></nav>
+    </div>
+  </section>
+
+  <div class="flag-bar" aria-hidden="true"></div>
+
+  <main id="main">
+    <div class="bento-grid">
+      <section class="card card--wide" id="contact-info">
+        <div class="card-header"><h2 class="card-title">direct lines</h2><span class="card-icon">📡</span></div>
+        <a href="mailto:planetkosi@gmail.com" class="contact-btn email">
+          <span class="label">✉️ planetkosi@gmail.com</span><span class="hint">opens mail app</span>
+        </a>
+        <a href="https://discord.com/users/1369005951637655756" target="_blank" rel="noopener" class="contact-btn discord" id="discord-link">
+          <span class="label">💬 Discord: <code>1369005951637655756</code></span><span class="hint">click to open / long-press to copy</span>
+        </a>
+        <a href="https://github.com/planetkosi" target="_blank" rel="noopener" class="contact-btn github">
+          <span class="label">🐙 @planetkosi</span><span class="hint">view repositories</span>
+        </a>
+        <div class="note-box">
+          💡 <strong>Tip:</strong> I prefer detailed messages over quick "hi"s. Include what you're building, your timeline, and how I can help. I usually reply within 24 hours.
+        </div>
+      </section>
+
+      <section class="card card--narrow" id="availability">
+        <div class="card-header"><h2 class="card-title">status</h2><span class="card-icon">🟢</span></div>
+        <ul>
+          <li>• <strong>Open</strong> to freelance projects</li>
+          <li>• <strong>Open</strong> to bot collaborations</li>
+          <li>• <strong>Closed</strong> to full-time roles (for now)</li>
+        </ul>
+        <p style="color:var(--muted); font-size:0.85rem; margin-top:0.75rem;">Prefer async? Drop a detailed email. I'll get back to you.</p>
+      </section>
+
+      <footer class="card">
+        <p>crafted in Zimbabwe 🇿🇼 · vanilla code only</p>
+        <p>© <span id="year"></span> kosi</p>
+        <button id="theme-toggle" class="theme-btn" aria-label="Toggle theme" title="Press T to toggle">◑</button>
+      </footer>
+    </div>
+  </main>
+
+  <script>
+    (function() {
+      'use strict';
+      document.getElementById('year').textContent = new Date().getFullYear();
+      const root = document.documentElement; const themeBtn = document.getElementById('theme-toggle');
+      const applyTheme = t => { root.dataset.theme = t; localStorage.setItem('theme', t); document.querySelector('meta[name="theme-color"]')?.setAttribute('content', t==='dark'?'#0a0a0a':'#fafafa'); };
+      const saved = localStorage.getItem('theme');
+      if (saved) applyTheme(saved); else if (!window.matchMedia('(prefers-color-scheme: dark)').matches) applyTheme('light');
+      themeBtn.addEventListener('click', () => applyTheme(root.dataset.theme==='dark'?'light':'dark'));
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => !localStorage.getItem('theme') && applyTheme(e.matches?'dark':'light'));
+      document.addEventListener('keydown', e => e.key.toLowerCase()==='t' && e.target.tagName!=='INPUT' && e.target.tagName!=='TEXTAREA' && (e.preventDefault(), themeBtn.click()));
+
+      const hero = document.getElementById('hero');
+      if (hero && !window.matchMedia('(prefers-reduced-motion: reduce)').matches && !('ontouchstart' in window)) {
+        hero.addEventListener('mousemove', e => {
+          const r = hero.getBoundingClientRect();
+          hero.style.setProperty('--mouse-x', `${e.clientX - r.left}px`);
+          hero.style.setProperty('--mouse-y', `${e.clientY - r.top}px`);
+        });
+      }
+
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const isTouch = 'ontouchstart' in window;
+      if (!prefersReduced && !isTouch) {
+        document.querySelectorAll('.card').forEach(card => {
+          card.addEventListener('mousemove', e => {
+            const r = card.getBoundingClientRect(); const x = e.clientX - r.left, y = e.clientY - r.top;
+            const cx = r.width/2, cy = r.height/2; const rx = ((y-cy)/cy)*-4, ry = ((x-cx)/cx)*4;
+            card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) scale3d(1.01,1.01,1.01)`;
+            card.style.setProperty('--glow-x', x+'px'); card.style.setProperty('--glow-y', y+'px');
+          });
+          card.addEventListener('mouseleave', () => { card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) scale3d(1,1,1)'; });
+        });
+      }
+
+      const dl = document.getElementById('discord-link');
+      if(dl) {
+        let t;
+        dl.addEventListener('touchstart', e => { t = setTimeout(() => { e.preventDefault(); navigator.clipboard?.writeText('1369005951637655756').then(()=>{const h=dl.querySelector('.hint');if(h){const o=h.textContent;h.textContent='✓ Copied!';setTimeout(()=>h.textContent=o,1500);}}); }, 800); });
+        dl.addEventListener('touchend', ()=>clearTimeout(t)); dl.addEventListener('touchcancel', ()=>clearTimeout(t));
+      }
+
+      const k=['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a']; let p=0;
+      document.addEventListener('keydown', e => { if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA') return; if(e.key===k[p]){p++;if(p===k.length){document.body.classList.toggle('rainbow-mode');p=0;}}else p=0; });
+    })();
+  </script>
+</body>
+</html>
