@@ -61,7 +61,7 @@
       100% { background-position: 100px 100px, -100px -100px, 50px -50px; }
     }
     
-    .container { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; position: relative; z-index: 1; }
+    .container { max-width: 1400px; margin: 0 auto; padding: 2rem 1rem; position: relative; z-index: 1; }
     
     /* Hero */
     .hero {
@@ -87,12 +87,18 @@
     .btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
     .btn-secondary:hover { background: var(--hover); border-color: var(--accent); }
     
-    /* BENTO GRID LAYOUT - 4 columns base */
+    /* BENTO GRID LAYOUT */
     .bento-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      grid-auto-rows: minmax(180px, auto);
+      /* 
+         Fluid sizing:
+         - Min 300px wide
+         - Max 450px wide (The "certain point" they don't go over)
+         - Auto-fit adds more columns if space allows
+      */
+      grid-template-columns: repeat(auto-fit, minmax(300px, 450px));
       gap: 1rem;
+      justify-content: center;
     }
     
     /* Card base styles */
@@ -118,22 +124,11 @@
     .card-icon { width: 24px; height: 24px; color: var(--muted); }
     .card-title { font-size: 1.1rem; font-weight: 700; text-transform: lowercase; letter-spacing: 0.02em; }
     
-    /* BENTO SIZES - Span columns/rows for variety */
-    .span-4 { grid-column: span 4; }  /* Full width */
-    .span-2 { grid-column: span 2; }  /* Half width */
-    .span-1 { grid-column: span 1; }  /* Quarter width */
-    .row-2 { grid-row: span 2; }      /* Double height */
-    
-    /* Responsive: Stack on smaller screens */
-    @media (max-width: 1024px) {
-      .bento-grid { grid-template-columns: repeat(2, 1fr); }
-      .span-4 { grid-column: span 2; }
-      .span-2 { grid-column: span 2; }
-    }
-    @media (max-width: 640px) {
-      .bento-grid { grid-template-columns: 1fr; }
-      .span-4, .span-2, .span-1 { grid-column: span 1; }
-      .row-2 { grid-row: span 1; }
+    /* ROW 1 EXCEPTION: About Me Card */
+    /* Forces the first card to span all columns, regardless of how many there are */
+    .bento-grid > .card:first-child {
+      grid-column: 1 / -1;
+      max-width: 100%;
     }
     
     /* Skills Section */
@@ -221,13 +216,14 @@
     <!-- BENTO GRID -->
     <div class="bento-grid">
       
-      <!-- ABOUT ME - Full Width (span-4) -->
-      <section class="card span-4">
+      <!-- ROW 1: ABOUT ME (Full Width) -->
+      <section class="card">
         <div class="card-header">
           <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
           <h2 class="card-title">about me</h2>
         </div>
-        <p style="color: var(--muted); line-height: 1.7; max-width: 700px;">
+        <!-- Added max-width to text for readability on wide screens -->
+        <p style="color: var(--muted); line-height: 1.7; max-width: 800px;">
           I'm a Zimbabwean developer focused on building clean, performant web experiences. 
           Currently working on <strong>Dragoon</strong>, a Discord bot for community management, 
           and crafting vanilla JS/CSS projects that prioritize speed and accessibility. 
@@ -235,8 +231,10 @@
         </p>
       </section>
       
-      <!-- SKILLS - Half Width (span-2) -->
-      <section class="card span-2">
+      <!-- ROW 2+: Fluid Cards -->
+      
+      <!-- Skills -->
+      <section class="card">
         <div class="card-header">
           <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
           <h2 class="card-title">skills</h2>
@@ -255,8 +253,8 @@
         </div>
       </section>
       
-      <!-- STATS - Half Width (span-2) -->
-      <section class="card span-2">
+      <!-- Stats -->
+      <section class="card">
         <div class="card-header">
           <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
           <h2 class="card-title">stats</h2>
@@ -271,54 +269,55 @@
             <div class="stat-label">Projects</div>
           </div>
           <div>
-            <div class="stat-value">🇿🇼</div>
+            <div class="stat-value">🇿</div>
             <div class="stat-label">Zimbabwe</div>
           </div>
         </div>
       </section>
       
-      <!-- PROJECTS - Full Width (span-4) with vertical list -->
-      <section class="card span-4">
+      <!-- Location -->
+      <section class="card">
         <div class="card-header">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-          <h2 class="card-title">featured projects</h2>
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          <h2 class="card-title">location</h2>
         </div>
-        <div class="projects-list">
-          
-          <article class="project-item">
-            <a href="https://github.com/planetkosi/dragoon" target="_blank" rel="noopener" class="project-title">🤖 Dragoon</a>
-            <p class="project-desc">Next-gen Discord bot for moderation, analytics & custom commands. Built with TypeScript.</p>
-            <div class="project-tags">
-              <span class="tag">TypeScript</span>
-              <span class="tag">Discord.js</span>
-              <span class="tag">SQLite</span>
-            </div>
-          </article>
-          
-          <article class="project-item">
-            <a href="#" class="project-title">🌐 planetkosi.dev</a>
-            <p class="project-desc">This portfolio. 100% vanilla HTML/CSS/JS. No frameworks. Fast, accessible, animated.</p>
-            <div class="project-tags">
-              <span class="tag">HTML5</span>
-              <span class="tag">CSS Grid</span>
-              <span class="tag">Vanilla JS</span>
-            </div>
-          </article>
-          
-          <article class="project-item">
-            <a href="#" class="project-title">⚡ QuickTools</a>
-            <p class="project-desc">Collection of lightweight browser utilities built for speed and privacy.</p>
-            <div class="project-tags">
-              <span class="tag">Vanilla JS</span>
-              <span class="tag">Web Extensions</span>
-            </div>
-          </article>
-          
+        <div style="text-align:center;">
+          <div style="font-size:2.5rem;margin-bottom:0.5rem;">🇿🇼</div>
+          <p style="color:var(--muted);font-size:0.9rem;">Harare, Zimbabwe</p>
+          <p style="color:var(--muted);font-size:0.8rem;margin-top:0.5rem;">GMT+2</p>
         </div>
       </section>
       
-      <!-- TERMINAL - Quarter Width (span-1) + Double Height (row-2) -->
-      <section class="card span-1 row-2">
+      <!-- Availability -->
+      <section class="card">
+        <div class="card-header">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <h2 class="card-title">availability</h2>
+        </div>
+        <div style="text-align:center;">
+          <div style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.4rem 0.8rem;background:rgba(0,166,81,0.15);border-radius:999px;color:var(--accent);font-weight:500;font-size:0.85rem;">
+            <span style="width:8px;height:8px;background:#23a559;border-radius:50%;"></span>
+            Open
+          </div>
+          <p style="color:var(--muted);font-size:0.85rem;margin-top:0.75rem;">Freelance & bot collaborations</p>
+        </div>
+      </section>
+      
+      <!-- Music -->
+      <section class="card">
+        <div class="card-header">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+          <h2 class="card-title">now playing</h2>
+        </div>
+        <div style="text-align:center;">
+          <p style="font-weight:600;font-size:0.9rem;">Lo-fi Beats</p>
+          <p style="color:var(--muted);font-size:0.8rem;margin:0.25rem 0;">for coding sessions</p>
+          <p style="color:var(--accent-secondary);font-size:0.75rem;margin-top:0.5rem;">🎧 Spotify</p>
+        </div>
+      </section>
+      
+      <!-- Terminal -->
+      <section class="card">
         <div class="card-header">
           <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="20" height="12" rx="3"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="4" y1="12" x2="8" y2="12"/></svg>
           <h2 class="card-title">terminal</h2>
@@ -340,49 +339,36 @@
         <style>@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}</style>
       </section>
       
-      <!-- LOCATION - Quarter Width (span-1) -->
-      <section class="card span-1">
+      <!-- Projects -->
+      <section class="card">
         <div class="card-header">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-          <h2 class="card-title">location</h2>
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          <h2 class="card-title">featured projects</h2>
         </div>
-        <div style="text-align:center;">
-          <div style="font-size:2.5rem;margin-bottom:0.5rem;">🇿🇼</div>
-          <p style="color:var(--muted);font-size:0.9rem;">Harare, Zimbabwe</p>
-          <p style="color:var(--muted);font-size:0.8rem;margin-top:0.5rem;">GMT+2</p>
+        <div class="projects-list">
+          <article class="project-item">
+            <a href="https://github.com/planetkosi/dragoon" target="_blank" rel="noopener" class="project-title">🤖 Dragoon</a>
+            <p class="project-desc">Next-gen Discord bot for moderation, analytics & custom commands.</p>
+            <div class="project-tags">
+              <span class="tag">TypeScript</span>
+              <span class="tag">Discord.js</span>
+              <span class="tag">SQLite</span>
+            </div>
+          </article>
+          <article class="project-item">
+            <a href="#" class="project-title">🌐 planetkosi.dev</a>
+            <p class="project-desc">This portfolio. 100% vanilla HTML/CSS/JS. Fast, accessible, animated.</p>
+            <div class="project-tags">
+              <span class="tag">HTML5</span>
+              <span class="tag">CSS Grid</span>
+              <span class="tag">Vanilla JS</span>
+            </div>
+          </article>
         </div>
       </section>
       
-      <!-- AVAILABILITY - Quarter Width (span-1) -->
-      <section class="card span-1">
-        <div class="card-header">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          <h2 class="card-title">availability</h2>
-        </div>
-        <div style="text-align:center;">
-          <div style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.4rem 0.8rem;background:rgba(0,166,81,0.15);border-radius:999px;color:var(--accent);font-weight:500;font-size:0.85rem;">
-            <span style="width:8px;height:8px;background:#23a559;border-radius:50%;"></span>
-            Open
-          </div>
-          <p style="color:var(--muted);font-size:0.85rem;margin-top:0.75rem;">Freelance & bot collaborations</p>
-        </div>
-      </section>
-      
-      <!-- MUSIC - Quarter Width (span-1) -->
-      <section class="card span-1">
-        <div class="card-header">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-          <h2 class="card-title">now playing</h2>
-        </div>
-        <div style="text-align:center;">
-          <p style="font-weight:600;font-size:0.9rem;">Lo-fi Beats</p>
-          <p style="color:var(--muted);font-size:0.8rem;margin:0.25rem 0;">for coding sessions</p>
-          <p style="color:var(--accent-secondary);font-size:0.75rem;margin-top:0.5rem;">🎧 Spotify</p>
-        </div>
-      </section>
-      
-      <!-- CONTACT CTA - Full Width (span-4) -->
-      <section class="card span-4 contact-cta">
+      <!-- CONTACT CTA -->
+      <section class="card contact-cta">
         <h2>ready to work together?</h2>
         <p>Have a project in mind or just want to chat about tech?</p>
         <a href="contact.html" class="btn btn-primary" style="align-self:center;">📬 Get in Touch</a>
