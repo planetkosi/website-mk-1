@@ -10,11 +10,12 @@
   <title>kosi · zimbabwean developer</title>
   <meta property="og:title" content="kosi · building Dragoon from Zimbabwe 🇿🇼" />
   <meta property="og:description" content="Crafting Dragoon: a powerful Discord bot. Clean vanilla code, bold ideas." />
-  <meta property="og:image" content="https://yourdomain.com/og-image.png" />
+  <meta property="og:image" content="resources/image.png" />
   <meta property="og:url" content="https://yourdomain.com" />
   
-  <!-- Favicon: Zimbabwe flag emoji -->
-  <link rel="icon" href="image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇿🇼</text></svg>" />
+  <!-- Favicon from your resources folder -->
+  <link rel="icon" type="image/svg+xml" href="resources/icon.svg">
+  <link rel="apple-touch-icon" href="resources/icon.svg">
 
   <style>
     /* =========================================================
@@ -93,7 +94,7 @@
     .skip-link:focus { top: 0; outline: 2px solid var(--accent); outline-offset: 2px; }
 
     /* =========================================================
-       3. HEADER (NOT IN CARD) - Name + Avatar + Country
+       3. HEADER (NOT IN CARD) - Profile Image + Name + Country
        ========================================================= */
     header.hero {
       text-align: center;
@@ -101,17 +102,16 @@
       margin-bottom: 1rem;
     }
     
+    /* Updated for actual image file */
     .avatar {
       width: 96px; height: 96px;
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
       margin: 0 auto 1rem;
-      display: grid; place-items: center;
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: #000;
-      box-shadow: var(--shadow);
+      display: block;
+      object-fit: cover;
       border: 3px solid var(--bg-card);
+      box-shadow: var(--shadow);
+      background: var(--bg-card); /* Fallback while loading */
       transition: transform var(--transition), box-shadow var(--transition);
     }
     .avatar:hover {
@@ -294,7 +294,7 @@
     @media (max-width: 520px) {
       body { padding: 1.25rem; }
       header.hero { padding: 1.5rem 0.5rem 1rem; }
-      .avatar { width: 80px; height: 80px; font-size: 2rem; }
+      .avatar { width: 80px; height: 80px; }
       footer { flex-direction: column; align-items: flex-start; }
       .contact-grid { grid-template-columns: 1fr; }
     }
@@ -319,7 +319,8 @@
 
   <!-- HEADER (NOT IN CARD) -->
   <header class="hero">
-    <div class="avatar" aria-label="Profile avatar">K</div>
+    <!-- Profile image from your resources folder -->
+    <img src="resources/image.png" alt="kosi profile picture" class="avatar" loading="lazy">
     <h1>kosi</h1>
     <p class="subtitle">web developer · bot builder · vanilla code enthusiast</p>
     <div class="location-badge">🇿🇼 Zimbabwe</div>
@@ -440,169 +441,102 @@
       function applyTheme(theme) {
         root.setAttribute('data-theme', theme);
         localStorage.setItem('theme', theme);
-        // Update meta theme-color for mobile browsers
         const metaTheme = document.querySelector('meta[name="theme-color"]');
-        if (metaTheme) {
-          metaTheme.setAttribute('content', theme === 'dark' ? '#0a0a0a' : '#fafafa');
-        }
+        if (metaTheme) metaTheme.setAttribute('content', theme === 'dark' ? '#0a0a0a' : '#fafafa');
       }
 
-      // Initialize theme
       const savedTheme = localStorage.getItem('theme');
       const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       
-      if (savedTheme) {
-        applyTheme(savedTheme);
-      } else if (!systemPrefersDark) {
-        applyTheme('light');
-      } // else stays dark (default)
+      if (savedTheme) applyTheme(savedTheme);
+      else if (!systemPrefersDark) applyTheme('light');
 
-      themeBtn.addEventListener('click', () => {
-        const current = root.getAttribute('data-theme');
-        applyTheme(current === 'dark' ? 'light' : 'dark');
-      });
+      themeBtn.addEventListener('click', () => applyTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
 
-      // Listen for system theme changes (only if user hasn't manually set one)
       window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-        if (!localStorage.getItem('theme')) {
-          applyTheme(e.matches ? 'dark' : 'light');
-        }
+        if (!localStorage.getItem('theme')) applyTheme(e.matches ? 'dark' : 'light');
       });
 
       // 3. KEYBOARD SHORTCUT: "T" TO TOGGLE THEME
       document.addEventListener('keydown', (e) => {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-        if (e.key.toLowerCase() === 't') {
-          e.preventDefault();
-          themeBtn.click();
-        }
+        if (e.key.toLowerCase() === 't') { e.preventDefault(); themeBtn.click(); }
       });
 
       // 4. DRAGOON STATUS: Fetch latest commit from GitHub
-      const DRAGOON_REPO = 'planetkosi/dragoon';
-      const STATUS_ENDPOINT = `https://api.github.com/repos/${DRAGOON_REPO}/commits?per_page=1`;
+      const STATUS_ENDPOINT = `https://api.github.com/repos/planetkosi/dragoon/commits?per_page=1`;
       
       async function loadDragoonStatus() {
         const container = document.getElementById('status-container');
-        
         try {
-          const res = await fetch(STATUS_ENDPOINT, {
-            headers: { 'Accept': 'application/vnd.github.v3+json' }
-          });
-          
-          if (!res.ok) throw new Error('GitHub API request failed');
+          const res = await fetch(STATUS_ENDPOINT, { headers: { 'Accept': 'application/vnd.github.v3+json' } });
+          if (!res.ok) throw new Error('API failed');
           const commits = await res.json();
           
-          if (commits[0] && commits[0].commit) {
-            const latest = commits[0];
-            const message = latest.commit.message.split('\n')[0].trim();
-            const author = latest.commit.author.name;
-            const time = new Date(latest.commit.author.date).toLocaleTimeString([], {
-              hour: '2-digit', minute: '2-digit', hour12: true
-            });
-            
+          if (commits[0]?.commit) {
+            const msg = commits[0].commit.message.split('\n')[0].trim();
+            const author = commits[0].commit.author.name;
+            const time = new Date(commits[0].commit.author.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             container.innerHTML = `
-              <p><span class="status-dot-large"></span> ${escapeHtml(message)}</p>
+              <p><span class="status-dot-large"></span> ${escapeHtml(msg)}</p>
               <p style="color:var(--muted); font-size:0.85em; margin-top:0.25rem">
                 by ${escapeHtml(author)} · ${time} · 
-                <a href="${latest.html_url}" target="_blank" rel="noopener" style="color:var(--accent)">view commit</a>
+                <a href="${commits[0].html_url}" target="_blank" rel="noopener" style="color:var(--accent)">view commit</a>
               </p>
             `;
-          } else {
-            throw new Error('No commit data found');
-          }
+          } else throw new Error('No data');
         } catch (err) {
-          // Fallback content when API is unavailable
           container.innerHTML = `
             <p>🔧 Refining Dragoon's command parser & moderation logic</p>
-            <p style="color:var(--muted); font-size:0.85em; margin-top:0.25rem">
-              next: custom command editor + performance optimizations
-            </p>
+            <p style="color:var(--muted); font-size:0.85em; margin-top:0.25rem">next: custom command editor + performance optimizations</p>
           `;
-          console.log('Using fallback status (GitHub API offline or rate-limited)');
         }
       }
       
-      // Simple HTML escape to prevent XSS from API responses
-      function escapeHtml(str) {
-        const div = document.createElement('div');
-        div.textContent = str;
-        return div.innerHTML;
-      }
-      
-      // Load status if container exists
-      if (document.getElementById('status-container')) {
-        loadDragoonStatus();
-        // Refresh every 10 minutes (GitHub API friendly rate limit)
-        setInterval(loadDragoonStatus, 10 * 60 * 1000);
-      }
+      function escapeHtml(str) { const d = document.createElement('div'); d.textContent = str; return d.innerHTML; }
+      if (document.getElementById('status-container')) { loadDragoonStatus(); setInterval(loadDragoonStatus, 600000); }
 
-      // 5. DISCORD LINK UX: Add copy-to-clipboard hint on long press (mobile)
+      // 5. DISCORD UX: Long-press to copy ID on mobile
       const discordLink = document.getElementById('discord-link');
       if (discordLink) {
-        let pressTimer;
-        
+        let timer;
         discordLink.addEventListener('touchstart', (e) => {
-          pressTimer = setTimeout(() => {
+          timer = setTimeout(() => {
             e.preventDefault();
-            navigator.clipboard?.writeText('1369005951637655756')
-              .then(() => {
-                const hint = discordLink.querySelector('.hint');
-                if (hint) {
-                  const original = hint.textContent;
-                  hint.textContent = '✓ ID copied!';
-                  setTimeout(() => hint.textContent = original, 1500);
-                }
-              })
-              .catch(() => {
-                // Fallback: select text
-                const range = document.createRange();
-                range.selectNode(discordLink.querySelector('code'));
-                window.getSelection()?.removeAllRanges();
-                window.getSelection()?.addRange(range);
-              });
-          }, 800); // Long press threshold
+            navigator.clipboard?.writeText('1369005951637655756').then(() => {
+              const hint = discordLink.querySelector('.hint');
+              if (hint) { const o = hint.textContent; hint.textContent = '✓ Copied!'; setTimeout(() => hint.textContent = o, 1500); }
+            });
+          }, 800);
         });
-        
-        discordLink.addEventListener('touchend', () => clearTimeout(pressTimer));
-        discordLink.addEventListener('touchcancel', () => clearTimeout(pressTimer));
+        discordLink.addEventListener('touchend', () => clearTimeout(timer));
+        discordLink.addEventListener('touchcancel', () => clearTimeout(timer));
       }
 
-      // 6. KONAMI CODE EASTER EGG: ↑↑↓↓←→←→BA
+      // 6. KONAMI CODE EASTER EGG
       const konami = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
-      let konamiPos = 0;
-
+      let pos = 0;
       document.addEventListener('keydown', (e) => {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-        
-        if (e.key === konami[konamiPos]) {
-          konamiPos++;
-          if (konamiPos === konami.length) {
+        if (e.key === konami[pos]) {
+          pos++;
+          if (pos === konami.length) {
             document.body.classList.toggle('rainbow-mode');
             const flag = document.querySelector('.flag-bar');
             if (flag) flag.style.opacity = flag.style.opacity === '1' ? '0.7' : '1';
-            console.log('🇿🇼 Zimbabwe mode toggled! Press Konami again to revert.');
-            konamiPos = 0;
+            console.log('🇿🇼 Zimbabwe mode toggled!');
+            pos = 0;
           }
-        } else {
-          konamiPos = 0;
-        }
+        } else pos = 0;
       });
 
-      // 7. PERFORMANCE: Preconnect to GitHub API
-      const preconnect = document.createElement('link');
-      preconnect.rel = 'preconnect';
-      preconnect.href = 'https://api.github.com';
-      document.head.appendChild(preconnect);
+      // 7. PERFORMANCE: Preconnect
+      const pc = document.createElement('link'); pc.rel = 'preconnect'; pc.href = 'https://api.github.com'; document.head.appendChild(pc);
 
-      // 8. CARD HOVER EFFECT ENHANCEMENT (subtle lift)
-      document.querySelectorAll('.card').forEach(card => {
-        card.addEventListener('mouseenter', function() {
-          this.style.transform = 'translateY(-2px)';
-        });
-        card.addEventListener('mouseleave', function() {
-          this.style.transform = 'translateY(0)';
-        });
+      // 8. CARD HOVER LIFT
+      document.querySelectorAll('.card').forEach(c => {
+        c.addEventListener('mouseenter', () => c.style.transform = 'translateY(-2px)');
+        c.addEventListener('mouseleave', () => c.style.transform = 'translateY(0)');
       });
 
     })();
