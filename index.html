@@ -3,61 +3,64 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="kosi — Zimbabwean web developer, builder of Dragoon, founder of a design agency" />
+  <meta name="description" content="kosi — Zimbabwean web developer, creator of Dragoon bot" />
   <meta name="theme-color" content="#0a0a0a" />
   
   <!-- SEO & Social Sharing -->
   <title>kosi · zimbabwean developer</title>
-  <meta property="og:title" content="kosi · building from Zimbabwe 🇿🇼" />
-  <meta property="og:description" content="Crafting Dragoon bot & launching a web design agency. Clean code, bold ideas." />
+  <meta property="og:title" content="kosi · building Dragoon from Zimbabwe 🇿🇼" />
+  <meta property="og:description" content="Crafting Dragoon: a powerful Discord bot. Clean vanilla code, bold ideas." />
   <meta property="og:image" content="https://yourdomain.com/og-image.png" />
   <meta property="og:url" content="https://yourdomain.com" />
   
-  <!-- Favicon: Zimbabwe flag emoji as SVG -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇿🇼</text></svg>" />
+  <!-- Favicon: Zimbabwe flag emoji -->
+  <link rel="icon" href="image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇿🇼</text></svg>" />
 
   <style>
     /* =========================================================
        1. CSS VARIABLES & THEME CONFIGURATION
-       Colors inspired by Zimbabwe's flag + modern dev aesthetic
+       Zimbabwe-inspired colors + modern card aesthetic
        ========================================================= */
     :root {
       /* Dark theme (default) */
       --bg: #0a0a0a;
+      --bg-card: #111111;
       --fg: #ededed;
       --muted: #888888;
       --accent: #00a651; /* Zimbabwe green */
       --accent-secondary: #fcd116; /* Zimbabwe yellow */
       --border: #222222;
-      --hover-bg: #1a1a1a;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      --shadow-hover: 0 8px 30px rgba(0, 166, 81, 0.25);
       --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      --max-width: 680px;
+      --max-width: 720px;
       --spacing: 2rem;
-      --radius: 6px;
-      --transition: 0.2s ease;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --transition: 0.25s ease;
     }
 
     /* Light theme override */
     [data-theme="light"] {
       --bg: #fafafa;
+      --bg-card: #ffffff;
       --fg: #111111;
       --muted: #666666;
-      --accent: #007a3d; /* darker green for contrast */
-      --accent-secondary: #d4af37; /* muted gold */
+      --accent: #007a3d;
+      --accent-secondary: #d4af37;
       --border: #e5e5e5;
-      --hover-bg: #f0f0f0;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 8px 30px rgba(0, 122, 61, 0.2);
     }
 
     /* Respect system preference if no manual override */
     @media (prefers-color-scheme: light) {
       html:not([data-theme]) {
-        --bg: #fafafa;
-        --fg: #111111;
-        --muted: #666666;
-        --accent: #007a3d;
-        --accent-secondary: #d4af37;
+        --bg: #fafafa; --bg-card: #ffffff; --fg: #111111; --muted: #666666;
+        --accent: #007a3d; --accent-secondary: #d4af37;
         --border: #e5e5e5;
-        --hover-bg: #f0f0f0;
+        --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        --shadow-hover: 0 8px 30px rgba(0, 122, 61, 0.2);
       }
     }
 
@@ -85,45 +88,103 @@
       position: absolute; top: -40px; left: 0;
       background: var(--accent); color: #fff;
       padding: 0.5rem 1rem; z-index: 100;
-      transition: top 0.2s;
+      transition: top 0.2s; border-radius: var(--radius-sm);
     }
-    .skip-link:focus { top: 0; }
+    .skip-link:focus { top: 0; outline: 2px solid var(--accent); outline-offset: 2px; }
 
     /* =========================================================
-       3. LAYOUT & TYPOGRAPHY
+       3. HEADER (NOT IN CARD) - Name + Avatar + Country
        ========================================================= */
-    header.hero { margin-bottom: 2.5rem; }
+    header.hero {
+      text-align: center;
+      padding: 2rem 1rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .avatar {
+      width: 96px; height: 96px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+      margin: 0 auto 1rem;
+      display: grid; place-items: center;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #000;
+      box-shadow: var(--shadow);
+      border: 3px solid var(--bg-card);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .avatar:hover {
+      transform: scale(1.05);
+      box-shadow: var(--shadow-hover);
+    }
+    
     header.hero h1 {
       font-size: clamp(1.75rem, 5vw, 2.25rem);
       font-weight: 800; letter-spacing: -0.03em;
+      margin-bottom: 0.25rem;
     }
-    .subtitle { 
-      color: var(--muted); 
-      margin-top: 0.25rem; 
+    
+    .subtitle {
+      color: var(--muted);
       font-size: 0.95rem;
+      margin-bottom: 0.75rem;
     }
+    
     .location-badge {
-      display: inline-flex; align-items: center; gap: 0.3rem;
-      background: var(--border); padding: 0.2rem 0.6rem;
-      border-radius: var(--radius); font-size: 0.8rem;
-      margin-top: 0.5rem; color: var(--fg);
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: var(--bg-card);
+      padding: 0.35rem 0.85rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
     }
 
-    section {
-      margin: 2.5rem 0;
-      padding-bottom: 1.5rem;
-      border-bottom: 1px solid var(--border);
-    }
-    section:last-child { border-bottom: none; }
-
-    h2 {
-      font-size: 1.15rem; color: var(--muted);
-      margin-bottom: 0.75rem; font-weight: 600;
-      text-transform: lowercase; letter-spacing: 0.02em;
+    /* Subtle Zimbabwe flag accent bar */
+    .flag-bar {
+      height: 3px;
+      background: linear-gradient(90deg, 
+        #007a3d 25%, #fcd116 25%, #fcd116 50%, 
+        #000 50%, #000 75%, #e11c26 75%);
+      margin: 0 auto 2rem;
+      border-radius: 2px;
+      opacity: 0.8;
+      max-width: 200px;
     }
 
     /* =========================================================
-       4. COMPONENTS (Lists, Links, Badges, Cards)
+       4. CARD SYSTEM - Reusable Component Styles
+       ========================================================= */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+    }
+    .card:hover {
+      border-color: var(--accent);
+      box-shadow: var(--shadow-hover);
+    }
+    .card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 0.75rem; padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .card-title {
+      font-size: 1.1rem; font-weight: 600; color: var(--fg);
+      text-transform: lowercase; letter-spacing: 0.02em;
+    }
+    .card-icon {
+      font-size: 1.2rem; opacity: 0.8;
+    }
+
+    /* =========================================================
+       5. CONTENT COMPONENTS (Lists, Links, Badges, etc.)
        ========================================================= */
     ul { list-style: none; }
     li { margin: 0.4rem 0; }
@@ -136,10 +197,37 @@
     a:hover { border-bottom-color: var(--accent); }
     .ext-icon { font-size: 0.85em; opacity: 0.6; margin-left: 3px; }
 
-    .projects-grid { display: grid; gap: 1.25rem; }
-    .project-card { 
-      padding: 0.5rem 0; 
-      border-left: 2px solid var(--border);
+    /* Contact buttons */
+    .contact-grid { display: grid; gap: 0.6rem; }
+    .contact-btn {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.6rem 0.85rem;
+      border-radius: var(--radius-sm);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--fg);
+      text-decoration: none;
+      font-weight: 500; font-size: 0.9rem;
+      transition: all var(--transition);
+    }
+    .contact-btn:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+    .contact-btn .label { display: flex; align-items: center; gap: 0.5rem; }
+    .contact-btn .hint {
+      font-size: 0.75rem; color: var(--muted);
+      opacity: 0; transition: opacity 0.2s;
+    }
+    .contact-btn:hover .hint { opacity: 1; }
+    .contact-btn.discord:hover { border-color: #5865F2; }
+    .contact-btn.email:hover { border-color: #ea4335; }
+    .contact-btn.github:hover { border-color: var(--accent); }
+
+    /* Project cards */
+    .projects-grid { display: grid; gap: 1rem; }
+    .project-card {
+      border-left: 3px solid var(--border);
       padding-left: 1rem;
       transition: border-color var(--transition);
     }
@@ -147,6 +235,7 @@
     
     .project-title { font-weight: 600; display: inline-block; margin-bottom: 0.25rem; }
     .project-desc { color: var(--muted); font-size: 0.95rem; margin: 0.25rem 0 0.5rem; }
+    
     .project-status {
       font-size: 0.8rem; color: var(--accent-secondary);
       margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.3rem;
@@ -159,70 +248,55 @@
     .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
     .badge {
       background: var(--border); color: var(--fg);
-      padding: 0.2rem 0.6rem; border-radius: var(--radius);
+      padding: 0.2rem 0.6rem; border-radius: var(--radius-sm);
       font-size: 0.75rem; font-weight: 500;
-      border: 1px solid transparent;
-      transition: border-color var(--transition);
+      border: 1px solid transparent; transition: border-color var(--transition);
     }
     .badge:hover { border-color: var(--accent); }
-    .badge.agency { background: var(--accent); color: #000; }
+    .badge.discord { background: #5865F2; color: #fff; border-color: #5865F2; }
 
-    /* Agency highlight section */
-    .agency-cta {
-      background: linear-gradient(135deg, var(--border), var(--hover-bg));
-      padding: 1rem; border-radius: var(--radius);
-      margin-top: 1rem; border: 1px solid var(--accent);
+    /* Status section */
+    #status-container { min-height: 2.4em; }
+    .status-loading { color: var(--muted); font-style: italic; }
+    .status-dot-large { 
+      display: inline-block; width: 8px; height: 8px; 
+      background: var(--accent); border-radius: 50%; margin-right: 6px; 
     }
-    .agency-cta h3 { font-size: 1rem; margin-bottom: 0.5rem; }
-    .agency-cta p { font-size: 0.9rem; color: var(--muted); margin-bottom: 0.75rem; }
-    .cta-btn {
-      display: inline-block; background: var(--accent); color: #000;
-      padding: 0.4rem 0.8rem; border-radius: var(--radius);
-      font-weight: 600; font-size: 0.9rem; text-decoration: none;
-      transition: opacity var(--transition);
-    }
-    .cta-btn:hover { opacity: 0.9; }
 
     /* =========================================================
-       5. STATUS SECTION & FOOTER
+       6. FOOTER & THEME TOGGLE
        ========================================================= */
-    #status-container { min-height: 1.6em; }
-    .status-loading { color: var(--muted); font-style: italic; }
-    .status-dot { display: inline-block; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; margin-right: 6px; }
-    
     footer {
       display: flex; justify-content: space-between; align-items: center;
       flex-wrap: wrap; gap: 1rem;
       color: var(--muted); font-size: 0.85rem;
-      padding-top: 1.5rem; margin-top: 2rem;
+      padding-top: 1.5rem; margin-top: 1rem;
       border-top: 1px solid var(--border);
     }
 
     .theme-btn {
-      background: none; border: 1px solid var(--border);
-      color: var(--fg); width: 34px; height: 34px; border-radius: 50%;
+      background: var(--bg-card); border: 1px solid var(--border);
+      color: var(--fg); width: 36px; height: 36px; border-radius: 50%;
       cursor: pointer; font-size: 1.1rem;
       display: grid; place-items: center;
-      transition: background var(--transition), border-color var(--transition);
+      transition: all var(--transition);
+      box-shadow: var(--shadow);
     }
-    .theme-btn:hover { background: var(--hover-bg); border-color: var(--accent); }
+    .theme-btn:hover { 
+      background: var(--accent); border-color: var(--accent); color: #000;
+      transform: rotate(15deg);
+    }
     .theme-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-    /* Zimbabwe flag accent bar (subtle) */
-    .flag-bar {
-      height: 3px; background: linear-gradient(90deg, 
-        #007a3d 25%, #fcd116 25%, #fcd116 50%, 
-        #000 50%, #000 75%, #e11c26 75%);
-      margin: 1.5rem 0; border-radius: 2px;
-      opacity: 0.7;
-    }
-
     /* =========================================================
-       6. RESPONSIVE & ACCESSIBILITY
+       7. RESPONSIVE & ACCESSIBILITY
        ========================================================= */
     @media (max-width: 520px) {
       body { padding: 1.25rem; }
+      header.hero { padding: 1.5rem 0.5rem 1rem; }
+      .avatar { width: 80px; height: 80px; font-size: 2rem; }
       footer { flex-direction: column; align-items: flex-start; }
+      .contact-grid { grid-template-columns: 1fr; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -243,259 +317,12 @@
 <body>
   <a href="#main" class="skip-link">Skip to content</a>
 
-  <main id="main">
-    <!-- HERO SECTION -->
-    <header class="hero">
-      <h1>kosi</h1>
-      <p class="subtitle">web developer · bot builder · agency founder</p>
-      <div class="location-badge">🇿🇼 Harare, Zimbabwe</div>
-    </header>
+  <!-- HEADER (NOT IN CARD) -->
+  <header class="hero">
+    <div class="avatar" aria-label="Profile avatar">K</div>
+    <h1>kosi</h1>
+    <p class="subtitle">web developer · bot builder · vanilla code enthusiast</p>
+    <div class="location-badge">🇿🇼 Zimbabwe</div>
+  </header>
 
-    <!-- Subtle Zimbabwe flag accent -->
-    <div class="flag-bar" aria-hidden="true"></div>
-
-    <!-- ABOUT / CURRENT FOCUS -->
-    <section id="about">
-      <h2>what i'm building</h2>
-      <ul>
-        <li>• <strong>Dragoon</strong> — a powerful, privacy-first Discord bot for communities</li>
-        <li>• Launching a <strong>web design agency</strong> focused on African startups</li>
-        <li>• Crafting minimalist, performant websites with vanilla code</li>
-        <li>• Advocating for developer tools that work offline & on low bandwidth 🌍</li>
-      </ul>
-    </section>
-
-    <!-- SOCIAL & CONTACT -->
-    <section id="links">
-      <h2>connect</h2>
-      <ul>
-        <li><a href="https://github.com/planetkosi" target="_blank" rel="noopener">GitHub: @planetkosi <span class="ext-icon">↗</span></a></li>
-        <li><a href="mailto:hello@kosi.dev">Email: hello@kosi.dev <span class="ext-icon">↗</span></a></li>
-        <li><a href="https://twitter.com/isthatkosi" target="_blank" rel="noopener">Twitter / X <span class="ext-icon">↗</span></a></li>
-        <li><a href="#" id="agency-link">Web Agency (coming soon) <span class="ext-icon">↗</span></a></li>
-      </ul>
-    </section>
-
-    <!-- PROJECTS -->
-    <section id="projects">
-      <h2>featured work</h2>
-      <div class="projects-grid">
-        
-        <!-- DRAGOON BOT - PRIMARY PROJECT -->
-        <article class="project-card">
-          <div class="project-status"><span class="status-dot"></span> in active development</div>
-          <a href="https://github.com/planetkosi/dragoon" target="_blank" rel="noopener" class="project-title">Dragoon</a>
-          <p class="project-desc">A next-gen Discord bot built for security, speed, and simplicity. Featuring auto-moderation, analytics, and custom commands — all with zero bloat.</p>
-          <div class="tags">
-            <span class="badge">TypeScript</span>
-            <span class="badge">Discord.js</span>
-            <span class="badge">SQLite</span>
-            <span class="badge">Zimbabwe 🇿🇼</span>
-          </div>
-        </article>
-
-        <!-- WEB AGENCY - SECONDARY PROJECT -->
-        <article class="project-card">
-          <div class="project-status"><span class="status-dot"></span> launching soon</div>
-          <span class="project-title">Web Design Agency</span>
-          <p class="project-desc">A boutique agency helping African startups and creators launch fast, beautiful, accessible websites. No templates. No fluff.</p>
-          <div class="tags">
-            <span class="badge agency">Agency</span>
-            <span class="badge">Vanilla JS</span>
-            <span class="badge">Performance-First</span>
-          </div>
-          <div class="agency-cta">
-            <h3>Interested in working together?</h3>
-            <p>Get early access to our launch list or inquire about custom projects.</p>
-            <a href="mailto:agency@kosi.dev?subject=Agency Inquiry" class="cta-btn">Get in touch</a>
-          </div>
-        </article>
-
-        <!-- PERSONAL SITE / PORTFOLIO -->
-        <article class="project-card">
-          <a href="https://planetkosi.github.io" target="_blank" rel="noopener" class="project-title">planetkosi.dev</a>
-          <p class="project-desc">This portfolio — built with 100% vanilla HTML/CSS/JS. No frameworks. No build step. Just clean, semantic code.</p>
-          <div class="tags">
-            <span class="badge">HTML5</span>
-            <span class="badge">CSS Variables</span>
-            <span class="badge">Vanilla JS</span>
-          </div>
-        </article>
-
-        <!-- TEMPLATE FOR FUTURE PROJECTS -->
-        <!-- 
-        <article class="project-card">
-          <div class="project-status"><span class="status-dot"></span> status</div>
-          <a href="#" target="_blank" rel="noopener" class="project-title">Project Name</a>
-          <p class="project-desc">Brief description focused on impact and tech.</p>
-          <div class="tags">
-            <span class="badge">Tech 1</span><span class="badge">Tech 2</span>
-          </div>
-        </article>
-        -->
-
-      </div>
-    </section>
-
-    <!-- LIVE STATUS / BUILD LOG -->
-    <section id="now">
-      <h2>building now</h2>
-      <div id="status-container">
-        <p class="status-loading">Loading build log...</p>
-      </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer>
-      <p>crafted in Zimbabwe 🇿🇼 · vanilla code only</p>
-      <p>© <span id="year"></span> kosi</p>
-      <button id="theme-toggle" class="theme-btn" aria-label="Toggle theme" title="Press T to toggle">◑</button>
-    </footer>
-  </main>
-
-  <script>
-    /* =========================================================
-       VANILLA JS — PERSONALIZED FOR KOSI / PLANETKOSI
-       All code wrapped in IIFE to avoid global scope pollution.
-       Features: theme toggle, status fetch, keyboard shortcuts, easter egg.
-       ========================================================= */
-    (function() {
-      'use strict';
-
-      // 1. DYNAMIC YEAR IN FOOTER
-      document.getElementById('year').textContent = new Date().getFullYear();
-
-      // 2. THEME TOGGLE WITH LOCALSTORAGE + SYSTEM PREFERENCE
-      const root = document.documentElement;
-      const themeBtn = document.getElementById('theme-toggle');
-      
-      function applyTheme(theme) {
-        root.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-        // Update meta theme-color for mobile browsers
-        document.querySelector('meta[name="theme-color"]').setAttribute('content', 
-          theme === 'dark' ? '#0a0a0a' : '#fafafa');
-      }
-
-      // Initialize: check saved preference or system default
-      const savedTheme = localStorage.getItem('theme');
-      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      
-      if (savedTheme) {
-        applyTheme(savedTheme);
-      } else if (!systemPrefersDark) {
-        applyTheme('light'); // Default to light if system prefers it
-      } // else stays dark (default)
-
-      // Toggle handler
-      themeBtn.addEventListener('click', () => {
-        const current = root.getAttribute('data-theme');
-        applyTheme(current === 'dark' ? 'light' : 'dark');
-      });
-
-      // Listen for system theme changes (only if user hasn't manually set one)
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-        if (!localStorage.getItem('theme')) {
-          applyTheme(e.matches ? 'dark' : 'light');
-        }
-      });
-
-      // 3. KEYBOARD SHORTCUT: "T" TO TOGGLE THEME
-      document.addEventListener('keydown', (e) => {
-        // Ignore if typing in form fields
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-        if (e.key.toLowerCase() === 't') {
-          e.preventDefault();
-          themeBtn.click();
-        }
-      });
-
-      // 4. PERSONAL STATUS / BUILD LOG FETCH
-      // Replace with your actual endpoint (GitHub Gist, Vercel Edge Function, etc.)
-      const STATUS_ENDPOINT = 'https://api.github.com/repos/planetkosi/dragoon/commits?per_page=1';
-      
-      async function loadBuildStatus() {
-        const container = document.getElementById('status-container');
-        
-        try {
-          const res = await fetch(STATUS_ENDPOINT);
-          if (!res.ok) throw new Error('Status fetch failed');
-          const commits = await res.json();
-          
-          if (commits[0]) {
-            const latest = commits[0];
-            const message = latest.commit.message.split('\n')[0];
-            const time = new Date(latest.commit.author.date).toLocaleTimeString([], {
-              hour: '2-digit', minute: '2-digit', hour12: true
-            });
-            
-            container.innerHTML = `
-              <p><span class="status-dot"></span> Dragoon: ${message}</p>
-              <p style="color:var(--muted); font-size:0.85em; margin-top:0.25rem">
-                last commit: ${time} · <a href="${latest.html_url}" target="_blank" rel="noopener" style="color:var(--accent)">view on GitHub</a>
-              </p>
-            `;
-          } else {
-            throw new Error('No commits found');
-          }
-        } catch (err) {
-          // Fallback content when API is unavailable
-          container.innerHTML = `
-            <p>🔧 Refining Dragoon's command parser</p>
-            <p style="color:var(--muted); font-size:0.85em; margin-top:0.25rem">
-              next: agency landing page + client onboarding flow
-            </p>
-          `;
-          console.log('Using fallback status (API offline or rate-limited)');
-        }
-      }
-      
-      // Only fetch if container exists
-      if (document.getElementById('status-container')) {
-        loadBuildStatus();
-        // Refresh status every 10 minutes (GitHub API friendly)
-        setInterval(loadBuildStatus, 10 * 60 * 1000);
-      }
-
-      // 5. AGENCY LINK HANDLER (prevent default if not ready)
-      const agencyLink = document.getElementById('agency-link');
-      if (agencyLink) {
-        agencyLink.addEventListener('click', (e) => {
-          // If agency isn't live yet, show friendly message
-          if (agencyLink.href === window.location.href + '#') {
-            e.preventDefault();
-            alert('🚧 Agency site launching soon!\n\nIn the meantime, email agency@kosi.dev to join the waitlist.');
-          }
-        });
-      }
-
-      // 6. KONAMI CODE EASTER EGG: ↑↑↓↓←→←→BA
-      // Unlocks a subtle Zimbabwe flag animation
-      const konami = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
-      let pos = 0;
-
-      document.addEventListener('keydown', (e) => {
-        if (e.key === konami[pos]) {
-          pos++;
-          if (pos === konami.length) {
-            document.body.classList.toggle('rainbow-mode');
-            const flag = document.querySelector('.flag-bar');
-            if (flag) flag.style.opacity = flag.style.opacity === '1' ? '0.7' : '1';
-            console.log('🇿🇼 Zimbabwe mode toggled! Press Konami again to revert.');
-            pos = 0;
-          }
-        } else {
-          pos = 0; // Reset on wrong key
-        }
-      });
-
-      // 7. PERFORMANCE: Preconnect to GitHub API for faster status fetch
-      const preconnect = document.createElement('link');
-      preconnect.rel = 'preconnect';
-      preconnect.href = 'https://api.github.com';
-      document.head.appendChild(preconnect);
-
-    })();
-  </script>
-</body>
-</html>
+  <!-- Subtle Zimbabwe flag accent
