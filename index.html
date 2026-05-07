@@ -325,4 +325,287 @@
     <div class="location-badge">🇿🇼 Zimbabwe</div>
   </header>
 
-  <!-- Subtle Zimbabwe flag accent
+  <!-- Subtle Zimbabwe flag accent -->
+  <div class="flag-bar" aria-hidden="true"></div>
+
+  <main id="main">
+    
+    <!-- ABOUT CARD -->
+    <section class="card" id="about">
+      <div class="card-header">
+        <h2 class="card-title">about me</h2>
+        <span class="card-icon">👋</span>
+      </div>
+      <ul>
+        <li>• Building <strong>Dragoon</strong> — a privacy-first Discord bot for communities</li>
+        <li>• Crafting minimalist, performant websites with 100% vanilla code</li>
+        <li>• Advocating for tools that work offline & on low bandwidth 🌍</li>
+        <li>• Building in public from Zimbabwe 🇿🇼</li>
+      </ul>
+    </section>
+
+    <!-- CONTACT CARD -->
+    <section class="card" id="contact">
+      <div class="card-header">
+        <h2 class="card-title">let's connect</h2>
+        <span class="card-icon">💬</span>
+      </div>
+      <div class="contact-grid">
+        <a href="mailto:planetkosi@gmail.com" class="contact-btn email">
+          <span class="label">✉️ planetkosi@gmail.com</span>
+          <span class="hint">opens mail app</span>
+        </a>
+        <a href="https://discord.com/users/1369005951637655756" target="_blank" rel="noopener" class="contact-btn discord" id="discord-link">
+          <span class="label">💬 Discord: <code>1369005951637655756</code></span>
+          <span class="hint">click to open</span>
+        </a>
+        <a href="https://github.com/planetkosi" target="_blank" rel="noopener" class="contact-btn github">
+          <span class="label">🐙 @planetkosi</span>
+          <span class="hint">view code</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- PROJECTS CARD -->
+    <section class="card" id="projects">
+      <div class="card-header">
+        <h2 class="card-title">featured work</h2>
+        <span class="card-icon">🚀</span>
+      </div>
+      <div class="projects-grid">
+        
+        <!-- DRAGOON BOT - PRIMARY PROJECT -->
+        <article class="project-card">
+          <div class="project-status"><span class="status-dot"></span> in active development</div>
+          <a href="https://github.com/planetkosi/dragoon" target="_blank" rel="noopener" class="project-title">Dragoon</a>
+          <p class="project-desc">A next-gen Discord bot built for security, speed, and simplicity. Featuring auto-moderation, analytics, and custom commands — all with zero bloat.</p>
+          <div class="tags">
+            <span class="badge">TypeScript</span>
+            <span class="badge">Discord.js</span>
+            <span class="badge">SQLite</span>
+            <span class="badge">🇿🇼</span>
+          </div>
+        </article>
+
+        <!-- PERSONAL SITE / PORTFOLIO -->
+        <article class="project-card">
+          <a href="https://planetkosi.github.io" target="_blank" rel="noopener" class="project-title">planetkosi.dev</a>
+          <p class="project-desc">This portfolio — built with 100% vanilla HTML/CSS/JS. No frameworks. No build step. Just clean, semantic code.</p>
+          <div class="tags">
+            <span class="badge">HTML5</span>
+            <span class="badge">CSS Variables</span>
+            <span class="badge">Vanilla JS</span>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- BUILD STATUS CARD -->
+    <section class="card" id="now">
+      <div class="card-header">
+        <h2 class="card-title">building now</h2>
+        <span class="card-icon">🔧</span>
+      </div>
+      <div id="status-container">
+        <p class="status-loading">Loading Dragoon build log...</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>crafted in Zimbabwe 🇿🇼 · vanilla code only</p>
+    <p>© <span id="year"></span> kosi</p>
+    <button id="theme-toggle" class="theme-btn" aria-label="Toggle theme" title="Press T to toggle">◑</button>
+  </footer>
+
+  <script>
+    /* =========================================================
+       VANILLA JS — PERSONALIZED FOR KOSI / PLANETKOSI
+       Features: theme toggle, GitHub status fetch, Discord UX, easter egg.
+       All code wrapped in IIFE to avoid global scope pollution.
+       ========================================================= */
+    (function() {
+      'use strict';
+
+      // 1. DYNAMIC YEAR IN FOOTER
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      // 2. THEME TOGGLE WITH LOCALSTORAGE + SYSTEM PREFERENCE
+      const root = document.documentElement;
+      const themeBtn = document.getElementById('theme-toggle');
+      
+      function applyTheme(theme) {
+        root.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        // Update meta theme-color for mobile browsers
+        const metaTheme = document.querySelector('meta[name="theme-color"]');
+        if (metaTheme) {
+          metaTheme.setAttribute('content', theme === 'dark' ? '#0a0a0a' : '#fafafa');
+        }
+      }
+
+      // Initialize theme
+      const savedTheme = localStorage.getItem('theme');
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      
+      if (savedTheme) {
+        applyTheme(savedTheme);
+      } else if (!systemPrefersDark) {
+        applyTheme('light');
+      } // else stays dark (default)
+
+      themeBtn.addEventListener('click', () => {
+        const current = root.getAttribute('data-theme');
+        applyTheme(current === 'dark' ? 'light' : 'dark');
+      });
+
+      // Listen for system theme changes (only if user hasn't manually set one)
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        if (!localStorage.getItem('theme')) {
+          applyTheme(e.matches ? 'dark' : 'light');
+        }
+      });
+
+      // 3. KEYBOARD SHORTCUT: "T" TO TOGGLE THEME
+      document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        if (e.key.toLowerCase() === 't') {
+          e.preventDefault();
+          themeBtn.click();
+        }
+      });
+
+      // 4. DRAGOON STATUS: Fetch latest commit from GitHub
+      const DRAGOON_REPO = 'planetkosi/dragoon';
+      const STATUS_ENDPOINT = `https://api.github.com/repos/${DRAGOON_REPO}/commits?per_page=1`;
+      
+      async function loadDragoonStatus() {
+        const container = document.getElementById('status-container');
+        
+        try {
+          const res = await fetch(STATUS_ENDPOINT, {
+            headers: { 'Accept': 'application/vnd.github.v3+json' }
+          });
+          
+          if (!res.ok) throw new Error('GitHub API request failed');
+          const commits = await res.json();
+          
+          if (commits[0] && commits[0].commit) {
+            const latest = commits[0];
+            const message = latest.commit.message.split('\n')[0].trim();
+            const author = latest.commit.author.name;
+            const time = new Date(latest.commit.author.date).toLocaleTimeString([], {
+              hour: '2-digit', minute: '2-digit', hour12: true
+            });
+            
+            container.innerHTML = `
+              <p><span class="status-dot-large"></span> ${escapeHtml(message)}</p>
+              <p style="color:var(--muted); font-size:0.85em; margin-top:0.25rem">
+                by ${escapeHtml(author)} · ${time} · 
+                <a href="${latest.html_url}" target="_blank" rel="noopener" style="color:var(--accent)">view commit</a>
+              </p>
+            `;
+          } else {
+            throw new Error('No commit data found');
+          }
+        } catch (err) {
+          // Fallback content when API is unavailable
+          container.innerHTML = `
+            <p>🔧 Refining Dragoon's command parser & moderation logic</p>
+            <p style="color:var(--muted); font-size:0.85em; margin-top:0.25rem">
+              next: custom command editor + performance optimizations
+            </p>
+          `;
+          console.log('Using fallback status (GitHub API offline or rate-limited)');
+        }
+      }
+      
+      // Simple HTML escape to prevent XSS from API responses
+      function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+      }
+      
+      // Load status if container exists
+      if (document.getElementById('status-container')) {
+        loadDragoonStatus();
+        // Refresh every 10 minutes (GitHub API friendly rate limit)
+        setInterval(loadDragoonStatus, 10 * 60 * 1000);
+      }
+
+      // 5. DISCORD LINK UX: Add copy-to-clipboard hint on long press (mobile)
+      const discordLink = document.getElementById('discord-link');
+      if (discordLink) {
+        let pressTimer;
+        
+        discordLink.addEventListener('touchstart', (e) => {
+          pressTimer = setTimeout(() => {
+            e.preventDefault();
+            navigator.clipboard?.writeText('1369005951637655756')
+              .then(() => {
+                const hint = discordLink.querySelector('.hint');
+                if (hint) {
+                  const original = hint.textContent;
+                  hint.textContent = '✓ ID copied!';
+                  setTimeout(() => hint.textContent = original, 1500);
+                }
+              })
+              .catch(() => {
+                // Fallback: select text
+                const range = document.createRange();
+                range.selectNode(discordLink.querySelector('code'));
+                window.getSelection()?.removeAllRanges();
+                window.getSelection()?.addRange(range);
+              });
+          }, 800); // Long press threshold
+        });
+        
+        discordLink.addEventListener('touchend', () => clearTimeout(pressTimer));
+        discordLink.addEventListener('touchcancel', () => clearTimeout(pressTimer));
+      }
+
+      // 6. KONAMI CODE EASTER EGG: ↑↑↓↓←→←→BA
+      const konami = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+      let konamiPos = 0;
+
+      document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        
+        if (e.key === konami[konamiPos]) {
+          konamiPos++;
+          if (konamiPos === konami.length) {
+            document.body.classList.toggle('rainbow-mode');
+            const flag = document.querySelector('.flag-bar');
+            if (flag) flag.style.opacity = flag.style.opacity === '1' ? '0.7' : '1';
+            console.log('🇿🇼 Zimbabwe mode toggled! Press Konami again to revert.');
+            konamiPos = 0;
+          }
+        } else {
+          konamiPos = 0;
+        }
+      });
+
+      // 7. PERFORMANCE: Preconnect to GitHub API
+      const preconnect = document.createElement('link');
+      preconnect.rel = 'preconnect';
+      preconnect.href = 'https://api.github.com';
+      document.head.appendChild(preconnect);
+
+      // 8. CARD HOVER EFFECT ENHANCEMENT (subtle lift)
+      document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+          this.style.transform = 'translateY(-2px)';
+        });
+        card.addEventListener('mouseleave', function() {
+          this.style.transform = 'translateY(0)';
+        });
+      });
+
+    })();
+  </script>
+</body>
+</html>
