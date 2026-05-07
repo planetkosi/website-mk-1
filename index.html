@@ -491,25 +491,24 @@
       </section>
 
       <!-- LAST.FM -->
-      <section class="card span-1">
-        <div class="ch">
-          <svg viewBox="0 0 24 24" fill="currentColor" style="color:var(--lastfm)"><path d="M10.584 17.21l-.88-2.392s-1.43 1.594-3.573 1.594c-1.897 0-3.244-1.649-3.244-4.288 0-3.382 1.704-4.591 3.381-4.591 2.42 0 3.189 1.567 3.849 3.574l.88 2.749c.88 2.666 2.529 4.81 7.284 4.81 3.409 0 5.718-1.044 5.718-3.793 0-2.227-1.265-3.381-3.627-3.932l-1.758-.385c-1.21-.275-1.567-.77-1.567-1.594 0-.935.742-1.484 1.952-1.484 1.32 0 2.034.495 2.144 1.677l2.749-.33c-.22-2.474-1.924-3.492-4.729-3.492-2.474 0-4.893.935-4.893 3.932 0 1.87.907 3.051 3.189 3.601l1.87.44c1.402.33 1.869.825 1.869 1.677 0 1.044-1.073 1.484-3.079 1.484-2.97 0-4.207-1.539-4.893-3.66l-.907-2.749C11.464 5.323 9.423 3.33 5.93 3.33 2.145 3.33 0 5.906 0 10.124c0 3.985 2.145 6.398 5.93 6.398 2.584 0 4.654-1.312 4.654-1.312z"/></svg>
-          <h2>last.fm</h2>
-        </div>
-        <div class="np">
-          <div class="art" id="albumArt"></div>
-          <div>
-            <div class="track-name" id="trackName">Arcade</div>
-            <div class="artist" id="artistName">Yukan</div>
-          </div>
-        </div>
-        <div class="fm-stats">
-          <div><div class="fm-val">8,059</div><div class="fm-lbl">scrobbles</div></div>
-          <div><div class="fm-val">953</div><div class="fm-lbl">artists</div></div>
-          <div><div class="fm-val">12</div><div class="fm-lbl">loved</div></div>
-        </div>
-      </section>
-
+  <section class="card span-1">
+    <div class="ch">
+      <svg viewBox="0 0 24 24" fill="currentColor" style="color:var(--lastfm)"><path d="M10.584 17.21l-.88-2.392s-1.43 1.594-3.573 1.594c-1.897 0-3.244-1.649-3.244-4.288 0-3.382 1.704-4.591 3.381-4.591 2.42 0 3.189 1.567 3.849 3.574l.88 2.749c.88 2.666 2.529 4.81 7.284 4.81 3.409 0 5.718-1.044 5.718-3.793 0-2.227-1.265-3.381-3.627-3.932l-1.758-.385c-1.21-.275-1.567-.77-1.567-1.594 0-.935.742-1.484 1.952-1.484 1.32 0 2.034.495 2.144 1.677l2.749-.33c-.22-2.474-1.924-3.492-4.729-3.492-2.474 0-4.893.935-4.893 3.932 0 1.87.907 3.051 3.189 3.601l1.87.44c1.402.33 1.869.825 1.869 1.677 0 1.044-1.073 1.484-3.079 1.484-2.97 0-4.207-1.539-4.893-3.66l-.907-2.749C11.464 5.323 9.423 3.33 5.93 3.33 2.145 3.33 0 5.906 0 10.124c0 3.985 2.145 6.398 5.93 6.398 2.584 0 4.654-1.312 4.654-1.312z"/></svg>
+      <h2>last.fm</h2>
+    </div>
+    <div class="np" id="fmNowPlaying">
+      <div class="art" id="fmArt"></div>
+      <div>
+        <div class="track-name" id="fmTrack">loading...</div>
+        <div class="artist" id="fmArtist">—</div>
+      </div>
+    </div>
+    <div class="fm-stats">
+      <div><div class="fm-val" id="fmScrobbles">—</div><div class="fm-lbl">scrobbles</div></div>
+      <div><div class="fm-val" id="fmArtists">—</div><div class="fm-lbl">artists</div></div>
+      <div><div class="fm-val" id="fmLovedCount">—</div><div class="fm-lbl">loved</div></div>
+    </div>
+  </section>
       <!-- TECH STACK -->
       <section class="card span-1">
         <div class="ch">
@@ -647,6 +646,73 @@
         const stars = repos.reduce((a,r)=>a+(r.stargazers_count||0),0);
         document.getElementById('gh-stars').textContent = stars;
       }).catch(()=>{ document.getElementById('gh-stars').textContent = '—'; });
+      /* ── LAST.FM ── */
+  const FM_KEY  = 'f5d48f2d7b67d7a77a47b8f0f01d80b4'; 
+  const FM_USER = 'alwayskosi'; 
+
+  async function loadLastFm() {
+    try {
+      // Recent tracks (now playing)
+      const recentRes = await fetch(
+        `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${FM_USER}&api_key=${FM_KEY}&format=json&limit=1`
+      );
+      const recentData = await recentRes.json();
+      const track = recentData.recenttracks?.track?.[0];
+
+      if (track) {
+        const isLive = track['@attr']?.nowplaying === 'true';
+        document.getElementById('fmTrack').textContent  = track.name || '—';
+        document.getElementById('fmArtist').textContent = track.artist?.['#text'] || '—';
+
+        // Album art
+        const imgUrl = track.image?.find(i => i.size === 'medium')?.['#text'];
+        const artEl  = document.getElementById('fmArt');
+        if (imgUrl && !imgUrl.includes('2a96cbd8b46e442fc41c2b86b821562f')) {
+          artEl.style.backgroundImage = `url(${imgUrl})`;
+          artEl.style.backgroundSize  = 'cover';
+        }
+
+        // Add a live indicator if currently playing
+        if (isLive) {
+          document.getElementById('fmTrack').insertAdjacentHTML(
+            'beforebegin',
+            '<span style="font-size:0.65rem;color:var(--lastfm);display:block;margin-bottom:2px;">▶ now playing</span>'
+          );
+        }
+      }
+
+      // User info (total scrobbles)
+      const infoRes = await fetch(
+        `https://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=${FM_USER}&api_key=${FM_KEY}&format=json`
+      );
+      const infoData = await infoRes.json();
+      const playcount = parseInt(infoData.user?.playcount || 0).toLocaleString();
+      document.getElementById('fmScrobbles').textContent = playcount;
+
+      // Artist count
+      const artistRes = await fetch(
+        `https://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=${FM_USER}&api_key=${FM_KEY}&format=json&period=overall&limit=1`
+      );
+      const artistData = await artistRes.json();
+      document.getElementById('fmArtists').textContent =
+        artistData.topartists?.['@attr']?.total || '—';
+
+      // Loved tracks count
+      const lovedRes = await fetch(
+        `https://ws.audioscrobbler.com/2.0/?method=user.getlovedtracks&user=${FM_USER}&api_key=${FM_KEY}&format=json&limit=1`
+      );
+      const lovedData = await lovedRes.json();
+      document.getElementById('fmLovedCount').textContent =
+        lovedData.lovedtracks?.['@attr']?.total || '—';
+
+    } catch (err) {
+      document.getElementById('fmTrack').textContent  = 'unavailable';
+      document.getElementById('fmArtist').textContent = '—';
+    }
+  }
+
+  loadLastFm();
+  setInterval(loadLastFm, 30000); // refresh every 30 seconds
   </script>
 </body>
 </html>
