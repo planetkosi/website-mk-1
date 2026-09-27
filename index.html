@@ -1,191 +1,934 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>kosi · zimbabwean developer</title>
-<style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #0d0d0d; color: #e5e5e5; line-height: 1.6; padding: 2rem; max-width: 1000px; margin: 0 auto; }
-a { color: #5865F2; text-decoration: none; }
-a:hover { text-decoration: underline; }
-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; border-bottom: 1px solid #222; padding-bottom: 1rem; }
-.logo { font-size: 1.5rem; font-weight: 700; color: #fff; }
-.logo span { color: #5865F2; }
-nav { display: flex; gap: 1.5rem; align-items: center; }
-nav a { color: #aaa; font-size: 0.9rem; }
-nav a.active { color: #fff; }
-.theme-toggle { background: none; border: none; color: #e5e5e5; font-size: 1.2rem; cursor: pointer; }
-h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
-h2 { font-size: 1.5rem; margin-bottom: 1rem; color: #fff; }
-h3 { font-size: 1.1rem; margin-bottom: 0.5rem; color: #e5e5e5; }
-.subtitle { color: #888; margin-bottom: 3rem; font-size: 1.1rem; }
-.card { background: #161616; border: 1px solid #222; border-radius: 12px; padding: 1.5rem; transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; }
-.card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
-.badge { display: inline-block; background: #2f2f2f; color: #aaa; padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.75rem; margin-bottom: 1rem; width: fit-content; }
-.badge.live { background: rgba(67, 181, 129, 0.1); color: #43b581; }
-.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-.equal-height-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; align-items: stretch; }
-.equal-height-grid .card { height: 100%; }
-.skills-list { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-.skill-tag { background: #222; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.85rem; color: #ccc; }
-.progress-bar { background: #222; border-radius: 4px; height: 8px; margin-top: 0.5rem; overflow: hidden; }
-.progress-fill { background: #5865F2; height: 100%; border-radius: 4px; }
-.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
-.stat { text-align: center; }
-.stat-value { font-size: 1.5rem; font-weight: 700; color: #fff; }
-.stat-label { font-size: 0.8rem; color: #888; }
-.loadout-item { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #222; font-size: 0.9rem; }
-.loadout-item:last-child { border-bottom: none; }
-.loadout-item span:first-child { color: #888; }
-.btn { padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; transition: background 0.2s, transform 0.1s; display: inline-block; text-align: center; }
-.btn-primary { background: #5865F2; color: #fff; }
-.btn-primary:hover { background: #4752c4; text-decoration: none; transform: scale(1.02); }
-.cta { text-align: center; padding: 3rem 1.5rem; background: #161616; border: 1px solid #222; border-radius: 12px; margin-bottom: 3rem; }
-.cta h2 { margin-bottom: 1rem; }
-.cta p { color: #aaa; margin-bottom: 1.5rem; }
-footer { text-align: center; color: #555; font-size: 0.8rem; padding-top: 2rem; border-top: 1px solid #222; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#050510" />
+  <title>kosi · zimbabwean developer</title>
+  <meta property="og:title" content="kosi · building Dragoon" />
+  <meta property="og:description" content="Crafting Dragoon: a powerful Discord bot. Clean vanilla code, bold ideas." />
+  <meta property="og:image" content="resources/image.png" />
+  <link rel="icon" type="image/svg+xml" href="resources/icon.svg" />
+
+  <script>
+    const SITE_CONFIG = {
+      lastfm: {
+        username: 'planetkosi',
+        apiKey: '3ffbc4f35f673ffacbc340a0f9def89b',
+      },
+
+      warframe: {
+        icon: '🐵',
+        iconFile: 'warframe.png', 
+        warframeName: 'Wukong Prime',
+        primary: 'Burston Prime',
+        secondary: 'Lex Prime',
+        melee: 'Orthos Prime',
+        ability: 'Hall of Mirrors',
+        mods: ['Serration', 'Multishot', 'Critical', 'Status'],
+      },
+    };
+  
+    (function () {
+      const root = document.documentElement;
+      const applyTheme = t => {
+        root.dataset.theme = t;
+        localStorage.setItem('theme', t);
+        document.querySelector('meta[name="theme-color"]')?.setAttribute('content', t === 'dark' ? '#050510' : '#f4f4f5');
+      };
+      const saved = localStorage.getItem('theme');
+      if (saved) applyTheme(saved);
+      else if (!window.matchMedia('(prefers-color-scheme: dark)').matches) applyTheme('light');
+    })();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!prefersReduced) {
+        let pendingGlow = null;
+        let glowFrameQueued = false;
+        const flushGlow = () => {
+          glowFrameQueued = false;
+          if (!pendingGlow) return;
+          const { card, x, y } = pendingGlow;
+          const rect = card.getBoundingClientRect();
+          card.style.setProperty('--glow-x', (x - rect.left) + 'px');
+          card.style.setProperty('--glow-y', (y - rect.top) + 'px');
+        };
+        document.querySelectorAll('.card').forEach(card => {
+          card.addEventListener('mousemove', e => {
+            pendingGlow = { card, x: e.clientX, y: e.clientY };
+            if (!glowFrameQueued) {
+              glowFrameQueued = true;
+              requestAnimationFrame(flushGlow);
+            }
+          });
+        });
+      }
+
+      function renderWarframeLoadout({ warframe }) {
+        const setText = (id, value) => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = value;
+        };
+        const nameEl = document.getElementById('wf-name');
+        if (nameEl) {
+          nameEl.innerHTML = `<img src="resources/emoji/${warframe.iconFile}" alt="${warframe.icon}" class="emoji" loading="lazy" onerror="this.replaceWith(document.createTextNode(this.alt))"> ${warframe.warframeName}`;
+        }
+        setText('wf-primary', warframe.primary);
+        setText('wf-secondary', warframe.secondary);
+        setText('wf-melee', warframe.melee);
+        setText('wf-ability', warframe.ability);
+
+        const modsEl = document.getElementById('wf-mods');
+        if (modsEl) {
+          modsEl.innerHTML = '';
+          warframe.mods.forEach(mod => {
+            const span = document.createElement('span');
+            span.className = 'mod-tag';
+            span.textContent = mod;
+            modsEl.appendChild(span);
+          });
+        }
+      }
+      renderWarframeLoadout(SITE_CONFIG);
+
+      async function loadLastFmStats({ lastfm }) {
+        const { username, apiKey } = lastfm;
+        if (!apiKey || apiKey === 'YOUR_LASTFM_API_KEY') {
+          console.warn('Last.fm: add your API key in SITE_CONFIG to enable live stats. Showing fallback values for now.');
+          return;
+        }
+
+        const base = 'https://ws.audioscrobbler.com/2.0/';
+        const setText = (id, value) => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = value;
+        };
+
+        try {
+          const infoUrl = `${base}?method=user.getinfo&user=${encodeURIComponent(username)}&api_key=${apiKey}&format=json`;
+          const infoRes = await fetch(infoUrl);
+          if (!infoRes.ok) throw new Error(`user.getinfo failed (${infoRes.status})`);
+          const infoData = await infoRes.json();
+          const user = infoData.user;
+          if (user) {
+            setText('lastfm-scrobbles', Number(user.playcount).toLocaleString());
+            setText('lastfm-artists', Number(user.artist_count).toLocaleString());
+          }
+
+          const recentUrl = `${base}?method=user.getrecenttracks&user=${encodeURIComponent(username)}&api_key=${apiKey}&format=json&limit=1`;
+          const recentRes = await fetch(recentUrl);
+          if (!recentRes.ok) throw new Error(`user.getrecenttracks failed (${recentRes.status})`);
+          const recentData = await recentRes.json();
+          const track = recentData?.recenttracks?.track?.[0];
+          if (track) {
+            setText('lastfm-track', track.name || '—');
+            setText('lastfm-artist', track.artist?.['#text'] || '—');
+            const art = track.image?.find(img => img.size === 'medium')?.['#text'];
+            const artEl = document.getElementById('lastfm-art');
+            if (art && artEl) {
+              artEl.style.backgroundImage = `url("${art}")`;
+              artEl.style.backgroundSize = 'cover';
+              artEl.style.backgroundPosition = 'center';
+            }
+          }
+        } catch (err) {
+          console.warn('Last.fm: could not load live stats, showing fallback values.', err);
+        }
+      }
+      loadLastFmStats(SITE_CONFIG);
+    });
+  </script>
+
+  <style>
+    :root {
+      --bg: #050510;
+      --bg-card: rgba(17, 17, 23, 0.6);
+      --bg-card-hover: rgba(22, 22, 30, 0.7);
+      --text: #ededed;
+      --muted: #888888;
+      --border: rgba(255, 255, 255, 0.12);
+      --hover: rgba(255, 255, 255, 0.08);
+      --discord: #5865F2;
+      --accent: #00a651;
+      --accent-secondary: #fcd116;
+      --lastfm: #d51007;
+      --warframe: #8a6bbd;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --transition: 0.2s ease;
+      --glass-bg: rgba(20, 20, 30, 0.4);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      --glass-blur: blur(12px);
+    }
+    
+    [data-theme="light"] {
+      --bg: #f4f4f5;
+      --bg-card: rgba(255, 255, 255, 0.7);
+      --bg-card-hover: rgba(250, 250, 250, 0.8);
+      --text: #111;
+      --muted: #666;
+      --border: rgba(0, 0, 0, 0.1);
+      --hover: rgba(0, 0, 0, 0.05);
+      --glass-bg: rgba(255, 255, 255, 0.5);
+      --glass-border: rgba(0, 0, 0, 0.1);
+      --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    .emoji {
+      height: 1em;
+      width: 1em;
+      display: inline-block;
+      vertical-align: -0.15em;
+      object-fit: contain;
+    }
+
+    body {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+    
+
+    .bg {
+      position: fixed;
+      inset: -12%;
+      z-index: -3;
+      background:
+        radial-gradient(circle at 18% 25%, rgba(0, 166, 81, 0.38), transparent 42%),
+        radial-gradient(circle at 82% 18%, rgba(252, 209, 22, 0.24), transparent 46%),
+        radial-gradient(circle at 65% 78%, rgba(99, 102, 241, 0.32), transparent 50%),
+        radial-gradient(circle at 22% 85%, rgba(213, 16, 7, 0.18), transparent 42%),
+        var(--bg);
+      filter: blur(60px) saturate(130%);
+      transform: translate3d(0, 0, 0);
+      animation: auroraDrift 36s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+    @keyframes auroraDrift {
+      0%   { transform: translate3d(0, 0, 0) scale(1); }
+      50%  { transform: translate3d(-3%, 2%, 0) scale(1.1); }
+      100% { transform: translate3d(2%, -3%, 0) scale(1); }
+    }
+
+    .star-field {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .star-field::before,
+    .star-field::after {
+      content: "";
+      position: absolute;
+      inset: -20%;
+      width: 140%;
+      height: 140%;
+      background-repeat: repeat;
+      background-image:
+        radial-gradient(1.5px 1.5px at 40px 60px, #fff, transparent),
+        radial-gradient(1px 1px at 120px 140px, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 200px 40px, #fff, transparent),
+        radial-gradient(1px 1px at 260px 180px, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 320px 90px, #fff, transparent);
+      background-size: 320px 220px;
+      transform: translate3d(0, 0, 0);
+      will-change: transform;
+    }
+    .star-field::before {
+      opacity: 0.85;
+      animation: starDrift 130s linear infinite;
+    }
+    .star-field::after {
+      opacity: 0.4;
+      background-size: 480px 340px;
+      animation: starDrift 210s linear infinite reverse;
+    }
+    @keyframes starDrift {
+      from { transform: translate3d(0, 0, 0); }
+      to   { transform: translate3d(-320px, -220px, 0); }
+    }
+    
+    .container { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; position: relative; z-index: 1; }
+    
+    .hero {
+      text-align: center;
+      padding: 3rem 1rem 2rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .avatar {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--glass-border);
+      background: var(--glass-bg);
+      box-shadow: var(--glass-shadow);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .avatar:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 40px rgba(0, 166, 81, 0.4);
+    }
+    
+    .hero h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin: 0;
+    }
+    
+    .hero .location {
+      color: var(--muted);
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      align-items: start;
+    }
+    
+    .card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      transition: border-color var(--transition), background var(--transition), transform 0.2s ease;
+      box-shadow: var(--glass-shadow);
+    }
+    
+    .card:hover {
+      border-color: var(--accent);
+      background: var(--bg-card-hover);
+      transform: translateY(-3px);
+    }
+    
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(400px circle at var(--glow-x, 50%) var(--glow-y, 50%), rgba(0, 166, 81, 0.12), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .card:hover::before { opacity: 1; }
+    .card > * { position: relative; z-index: 1; }
+    
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .card-icon { width: 24px; height: 24px; color: var(--muted); }
+    .card-title { font-size: 1.1rem; font-weight: 700; text-transform: lowercase; letter-spacing: 0.02em; }
+    
+    .bento-grid > .card:first-child,
+    .bento-grid > .card:last-child {
+      grid-column: 1 / -1;
+    }
+    
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+      gap: 0.5rem;
+    }
+    .skill-badge {
+      padding: 0.4rem 0.6rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.7rem;
+      text-align: center;
+      transition: all var(--transition);
+    }
+    .skill-badge:hover {
+      border-color: var(--accent);
+      transform: scale(1.05);
+    }
+    
+    .availability-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.8rem;
+      background: rgba(0, 166, 81, 0.15);
+      border-radius: 999px;
+      color: var(--accent);
+      font-weight: 500;
+      font-size: 0.85rem;
+    }
+    .availability-badge .dot {
+      width: 8px;
+      height: 8px;
+      background: #23a559;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    
+    .learning-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .learning-item { display: flex; justify-content: space-between; align-items: center; }
+    .learning-name { font-size: 0.9rem; }
+    .learning-percent { font-size: 0.75rem; color: var(--accent); font-weight: 600; }
+    .progress-bar {
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 0.25rem;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 2px;
+      transition: width 0.5s ease;
+    }
+    
+    .lastfm-card { display: flex; flex-direction: column; gap: 1rem; }
+    .lastfm-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .lastfm-logo {
+      width: 24px;
+      height: 24px;
+      color: var(--lastfm);
+    }
+    .lastfm-username {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .lastfm-username:hover { color: var(--lastfm); }
+    
+    .now-playing {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      padding: 0.75rem;
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      border-left: 3px solid var(--lastfm);
+    }
+    .album-art {
+      width: 56px;
+      height: 56px;
+      border-radius: 6px;
+      object-fit: cover;
+      background: linear-gradient(135deg, var(--lastfm), #8a0b05);
+    }
+    .track-info { flex: 1; }
+    .track-name { font-weight: 600; font-size: 0.9rem; }
+    .artist-name { font-size: 0.8rem; color: var(--muted); }
+    
+    .lastfm-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      text-align: center;
+    }
+    .lastfm-stat-value {
+      font-weight: 700;
+      color: var(--lastfm);
+      font-size: 1.1rem;
+    }
+    .lastfm-stat-label {
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .songs-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .song-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem;
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      transition: background var(--transition);
+    }
+    .song-item:hover { background: var(--hover); }
+    .song-rank {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #000;
+      display: grid;
+      place-items: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+    .song-details { flex: 1; }
+    .song-title { font-weight: 600; font-size: 0.9rem; }
+    .song-artist { font-size: 0.75rem; color: var(--muted); }
+    
+    .project-highlight {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .project-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.25rem 0.6rem;
+      background: rgba(0, 166, 81, 0.15);
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--accent);
+    }
+    .project-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.5; }
+    .project-tech { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.5rem; }
+    .project-tag {
+      font-size: 0.65rem;
+      padding: 0.15rem 0.4rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+    
+    .warframe-card { display: flex; flex-direction: column; gap: 1rem; }
+    .warframe-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .warframe-icon {
+      width: 24px;
+      height: 24px;
+      color: var(--warframe);
+    }
+    .warframe-name { font-weight: 600; font-size: 0.95rem; }
+    
+    .loadout-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+    .loadout-slot {
+      background: var(--bg);
+      padding: 0.75rem;
+      border-radius: var(--radius-sm);
+      border-left: 2px solid var(--warframe);
+    }
+    .slot-label {
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.25rem;
+    }
+    .slot-value { font-weight: 600; font-size: 0.85rem; }
+    
+    .warframe-mods {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-top: 0.5rem;
+    }
+    .mod-tag {
+      font-size: 0.65rem;
+      padding: 0.15rem 0.4rem;
+      background: rgba(138, 107, 189, 0.15);
+      border: 1px solid var(--warframe);
+      border-radius: 6px;
+      color: var(--warframe);
+    }
+    
+    .projects-list { display: flex; flex-direction: column; gap: 1rem; }
+    .project-item {
+      padding: 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      transition: border-color var(--transition);
+    }
+    .project-item:hover { border-color: var(--accent); }
+    .project-title {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.25rem;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .project-title:hover { color: var(--accent); }
+    .project-desc { font-size: 0.85rem; color: var(--muted); margin-bottom: 0.5rem; }
+    .project-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+    .tag {
+      font-size: 0.65rem;
+      padding: 0.15rem 0.4rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+    
+    .contact-cta {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+    .contact-cta h2 { font-size: 1.25rem; margin: 0; }
+    .contact-cta p { color: var(--muted); font-size: 0.9rem; margin: 0; }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.25rem;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-decoration: none;
+      transition: all var(--transition);
+      border: none;
+      cursor: pointer;
+      justify-content: center;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #000;
+    }
+    .btn-primary:hover {
+      background: #008a42;
+      transform: translateY(-2px);
+    }
+    
+    .footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    .footer-brand { font-weight: 700; color: var(--text); }
+    .footer-brand span { font-weight: 400; }
+    
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 1.75rem; }
+      .loadout-grid { grid-template-columns: 1fr; }
+    }
+    
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+      .bg, .star-field::before, .star-field::after { animation: none !important; }
+    }
+  </style>
 </head>
 <body>
-<header>
-<div class="logo">kosi<span>.dev</span></div>
-<nav>
-<a href="index.html" class="active">home</a>
-<a href="contact.html">contact</a>
-<button class="theme-toggle">☀️</button>
-</nav>
-</header>
-<main>
-<h1>kosi</h1>
-<p class="subtitle">Harare, Zimbabwe</p>
-
-<div class="grid-2">
-<div class="card">
-<h2>about me</h2>
-<p>I'm a Zimbabwean developer building clean, performant web experiences. Currently working on Dragoon, a full-featured Discord bot for community management — moderation, analytics, and custom commands.</p>
-<br>
-<p>I write vanilla JS/CSS by choice: no bloat, no abstraction overhead, just fast accessible code. I believe software should be readable, maintainable, and delightful.</p>
-</div>
-<div class="card">
-<h2>skills</h2>
-<div class="skills-list">
-<span class="skill-tag">HTML5</span>
-<span class="skill-tag">CSS3</span>
-<span class="skill-tag">Vanilla JS</span>
-<span class="skill-tag">TypeScript</span>
-<span class="skill-tag">Node.js</span>
-<span class="skill-tag">Discord.js</span>
-<span class="skill-tag">Git</span>
-<span class="skill-tag">SQLite</span>
-<span class="skill-tag">REST APIs</span>
-<span class="skill-tag">WebSockets</span>
-</div>
-<br>
-<h2>availability</h2>
-<p><span class="badge live">Open</span></p>
-<p style="font-size: 0.9rem; color: #aaa;">Freelance & bot collaborations<br>Reply within 24 hrs</p>
-</div>
-</div>
-
-<div class="grid-2">
-<div class="card">
-<h2>learning</h2>
-<div style="margin-bottom: 1rem;">
-<div style="display: flex; justify-content: space-between; font-size: 0.9rem;"><span>WebSockets</span><span>75%</span></div>
-<div class="progress-bar"><div class="progress-fill" style="width: 75%;"></div></div>
-</div>
-<div style="margin-bottom: 1rem;">
-<div style="display: flex; justify-content: space-between; font-size: 0.9rem;"><span>Rust</span><span>30%</span></div>
-<div class="progress-bar"><div class="progress-fill" style="width: 30%;"></div></div>
-</div>
-<div>
-<div style="display: flex; justify-content: space-between; font-size: 0.9rem;"><span>Next.js</span><span>55%</span></div>
-<div class="progress-bar"><div class="progress-fill" style="width: 55%;"></div></div>
-</div>
-</div>
-<div class="card">
-<h2>last.fm</h2>
-<p><a href="https://www.last.fm/user/planetkosi" target="_blank" rel="noopener">@planetkosi ↗</a></p>
-<p style="font-size: 0.9rem; color: #ccc; margin: 0.5rem 0;">Top Track: <strong>Arcade - Yukan</strong></p>
-<div class="stat-grid">
-<div class="stat">
-<div class="stat-value">8,059</div>
-<div class="stat-label">Scrobbles</div>
-</div>
-<div class="stat">
-<div class="stat-value">953</div>
-<div class="stat-label">Artists</div>
-</div>
-</div>
-<br>
-<h3>favorite songs</h3>
-<ol style="padding-left: 1.2rem; color: #ccc; font-size: 0.9rem; line-height: 1.8;">
-<li>Arcade - Yukan</li>
-<li>Midnight City - M83</li>
-<li>Teardrop - Massive Attack</li>
-<li>Breathe Me - Sia</li>
-</ol>
-</div>
-</div>
-
-<div class="equal-height-grid">
-<div class="card">
-<span class="badge">In Development</span>
-<h2>new project</h2>
-<h3>Dragoon v2.0</h3>
-<p style="color: #aaa; font-size: 0.9rem; margin-bottom: 1rem;">Complete rewrite of Dragoon with modular architecture, real-time analytics dashboard, and advanced permission system.</p>
-<div class="skills-list">
-<span class="skill-tag">TypeScript</span>
-<span class="skill-tag">WebSocket</span>
-<span class="skill-tag">PostgreSQL</span>
-<span class="skill-tag">Redis</span>
-</div>
-</div>
-<div class="card">
-<h2>warframe loadout</h2>
-<p style="font-size: 1.2rem; margin-bottom: 1rem;">🎭 Mirage Prime</p>
-<div class="loadout-item"><span>Primary</span><span>Rubico Prime</span></div>
-<div class="loadout-item"><span>Secondary</span><span>Vasto Prime</span></div>
-<div class="loadout-item"><span>Melee</span><span>Orthos Prime</span></div>
-<div class="loadout-item"><span>Ability</span><span>Hall of Mirrors</span></div>
-<div class="loadout-item"><span>Mod</span><span>Serration</span></div>
-<div class="loadout-item"><span>Mod</span><span>Multishot</span></div>
-<div class="loadout-item"><span>Mod</span><span>Critical</span></div>
-<div class="loadout-item"><span>Mod</span><span>Status</span></div>
-</div>
-<div class="card">
-<h2>featured projects</h2>
-<div style="margin-bottom: 1.5rem;">
-<h3><a href="#">Dragoon ↗</a></h3>
-<p style="color: #aaa; font-size: 0.9rem;">Next-gen Discord bot for moderation, analytics & custom commands. Built with performance and extensibility in mind.</p>
-<div class="skills-list" style="margin-top: 0.5rem;">
-<span class="skill-tag">TypeScript</span>
-<span class="skill-tag">Discord.js</span>
-<span class="skill-tag">SQLite</span>
-<span class="skill-tag">Node.js</span>
-</div>
-</div>
-<div>
-<h3><a href="#">planetkosi.dev ↗</a></h3>
-<p style="color: #aaa; font-size: 0.9rem;">This portfolio. 100% vanilla HTML/CSS/JS — fast, accessible, animated. No frameworks, no build step.</p>
-<div class="skills-list" style="margin-top: 0.5rem;">
-<span class="skill-tag">HTML5</span>
-<span class="skill-tag">CSS Grid</span>
-<span class="skill-tag">Vanilla JS</span>
-</div>
-</div>
-</div>
-</div>
-
-<div class="cta">
-<h2>ready to work together?</h2>
-<p>Have a project in mind or want to chat about tech? I'm open to freelance work and collaborations.</p>
-<a href="contact.html" class="btn btn-primary">Get in Touch</a>
-</div>
-</main>
-<footer>
-kosi.dev·building from Zimbabwe 🇿🇼 · <a href="https://github.com/planetkosi" target="_blank" rel="noopener">GitHub</a>
-</footer>
+  <!-- Background: self-contained aurora + starfield, no external image -->
+  <div class="bg"></div>
+  <div class="star-field"></div>
+  
+  <div class="container">
+    <!-- Minimal Hero: Avatar + Name + Location Only -->
+    <section class="hero">
+      <img src="resources/image.png" alt="kosi" class="avatar" />
+      <h1>kosi</h1>
+      <div class="location"><img src="resources/emoji/zimbabwe.png" alt="🇿🇼" class="emoji" loading="lazy" onerror="this.replaceWith(document.createTextNode(this.alt))"> Harare, Zimbabwe</div>
+    </section>
+    
+    <!-- BENTO GRID -->
+    <div class="bento-grid">
+      
+      <!-- ROW 1: ABOUT ME (Full Width) -->
+      <section class="card">
+        <div class="card-header">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          <h2 class="card-title">about me</h2>
+        </div>
+        <p style="color: var(--muted); line-height: 1.7;">
+          I'm a Zimbabwean developer building clean, performant web experiences.
+          Currently working on <strong>Dragoon</strong>, a full-featured Discord bot for community management — moderation, analytics, and custom commands.
+          I write vanilla JS/CSS by choice: no bloat, no abstraction overhead, just fast accessible code.
+          I believe software should be readable, maintainable, and delightful.
+        </p>
+      </section>
+      
+      <!-- Skills -->
+      <section class="card">
+        <div class="card-header">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+          <h2 class="card-title">skills</h2>
+        </div>
+        <div class="skills-grid">
+          <span class="skill-badge">HTML5</span>
+          <span class="skill-badge">CSS3</span>
+          <span class="skill-badge">Vanilla JS</span>
+          <span class="skill-badge">TypeScript</span>
+          <span class="skill-badge">Node.js</span>
+          <span class="skill-badge">Discord.js</span>
+          <span class="skill-badge">Git</span>
+          <span class="skill-badge">SQLite</span>
+          <span class="skill-badge">REST APIs</span>
+          <span class="skill-badge">WebSockets</span>
+        </div>
+      </section>
+      
+      <!-- Availability (moved from location) -->
+      <section class="card">
+        <div class="card-header">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <h2 class="card-title">availability</h2>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;">
+          <div class="availability-badge">
+            <span class="dot"></span>
+            Open
+          </div>
+          <p style="color:var(--muted);font-size:0.85rem;">Freelance & bot collaborations</p>
+          <p style="color:var(--muted);font-size:0.8rem;">Reply within 24 hrs</p>
+        </div>
+      </section>
+      
+      <!-- Currently Learning -->
+      <section class="card">
+        <div class="card-header">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <h2 class="card-title">learning</h2>
+        </div>
+        <div class="learning-list">
+          <div>
+            <div class="learning-item">
+              <span class="learning-name">WebSockets</span>
+              <span class="learning-percent">75%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:75%"></div></div>
+          </div>
+          <div>
+            <div class="learning-item">
+              <span class="learning-name">Rust</span>
+              <span class="learning-percent">30%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:30%"></div></div>
+          </div>
+          <div>
+            <div class="learning-item">
+              <span class="learning-name">Next.js</span>
+              <span class="learning-percent">55%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:55%"></div></div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Last.fm (Enhanced) -->
+      <section class="card">
+        <div class="card-header">
+          <svg class="card-icon lastfm-logo" viewBox="0 0 24 24" fill="currentColor"><path d="M10.584 17.21l-.88-2.392s-1.43 1.594-3.573 1.594c-1.897 0-3.244-1.649-3.244-4.288 0-3.382 1.704-4.591 3.381-4.591 2.42 0 3.189 1.567 3.849 3.574l.88 2.749c.88 2.666 2.529 4.81 7.284 4.81 3.409 0 5.718-1.044 5.718-3.793 0-2.227-1.265-3.381-3.627-3.932l-1.758-.385c-1.21-.275-1.567-.77-1.567-1.594 0-.935.742-1.484 1.952-1.484 1.32 0 2.034.495 2.144 1.677l2.749-.33c-.22-2.474-1.924-3.492-4.729-3.492-2.474 0-4.893.935-4.893 3.932 0 1.87.907 3.051 3.189 3.601l1.87.44c1.402.33 1.869.825 1.869 1.677 0 1.044-1.073 1.484-3.079 1.484-2.97 0-4.207-1.539-4.893-3.66l-.907-2.749C11.464 5.323 9.423 3.33 5.93 3.33 2.145 3.33 0 5.906 0 10.124c0 3.985 2.145 6.398 5.93 6.398 2.584 0 4.654-1.312 4.654-1.312z"/></svg>
+          <h2 class="card-title">last.fm</h2>
+        </div>
+        <div class="lastfm-card">
+          <div class="lastfm-header">
+            <a href="https://www.last.fm/user/planetkosi" target="_blank" rel="noopener" class="lastfm-username">@planetkosi ↗</a>
+          </div>
+          <div class="now-playing">
+            <div class="album-art" id="lastfm-art"></div>
+            <div class="track-info">
+              <div class="track-name" id="lastfm-track">Arcade</div>
+              <div class="artist-name" id="lastfm-artist">Yukan</div>
+            </div>
+          </div>
+          <div class="lastfm-stats">
+            <div>
+              <div class="lastfm-stat-value" id="lastfm-scrobbles">8,059</div>
+              <div class="lastfm-stat-label">Scrobbles</div>
+            </div>
+            <div>
+              <div class="lastfm-stat-value" id="lastfm-artists">953</div>
+              <div class="lastfm-stat-label">Artists</div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Favorite Songs (NEW) -->
+      <section class="card">
+        <div class="card-header">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          <h2 class="card-title">favorite songs</h2>
+        </div>
+        <div class="songs-list">
+          <div class="song-item">
+            <div class="song-rank">1</div>
+            <div class="song-details">
+              <div class="song-title">Arcade</div>
+              <div class="song-artist">Yukan</div>
+            </div>
+          </div>
+          <div class="song-item">
+            <div class="song-rank">2</div>
+            <div class="song-details">
+              <div class="song-title">Midnight City</div>
+              <div class="song-artist">M83</div>
+            </div>
+          </div>
+          <div class="song-item">
+            <div class="song-rank">3</div>
+            <div class="song-details">
+              <div class="song-title">Teardrop</div>
+              <div class="song-artist">Massive Attack</div>
+            </div>
+          </div>
+          <div class="song-item">
+            <div class="song-rank">4</div>
+            <div class="song-details">
+              <div class="song-title">Breathe Me</div>
+              <div class="song-artist">Sia</div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- New Project (NEW) -->
+      <section class="card">
+        <div class="card-header">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          <h2 class="card-title">new project</h2>
+        </div>
+        <div class="project-highlight">
+          <div class="project-badge"><img src="resources/emoji/rocket.png" alt="🚀" class="emoji" loading="lazy" onerror="this.replaceWith(document.createTextNode(this.alt))"> In Development</div>
+          <h3 style="font-size:1.1rem;font-weight:700;margin:0;">Dragoon v2.0</h3>
+          <p class="project-desc">Complete rewrite of Dragoon with modular architecture, real-time analytics dashboard, and advanced permission system.</p>
+          <div class="project-tech">
+            <span class="project-tag">TypeScript</span>
+            <span class="project-tag">WebSocket</span>
+            <span class="project-tag">PostgreSQL</span>
+            <span class="project-tag">Redis</span>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Warframe Loadout (NEW) -->
+      <section class="card">
+        <div class="card-header">
+          <svg class="card-icon warframe-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          <h2 class="card-title">warframe loadout</h2>
+        </div>
+        <div class="warframe-card">
+          <div class="warframe-header">
+            <span class="warframe-name" id="wf-name">🎭 Mirage Prime</span>
+          </div>
+          <div class="loadout-grid">
+            <div class="loadout-slot">
+              <div class="slot-label">Primary</div>
+              <div class="slot-value" id="wf-primary">Rubico Prime</div>
+            </div>
+            <div class="loadout-slot">
+              <div class="slot-label">Secondary</div>
+              <div class="slot-value" id="wf-secondary">Vasto Prime</div>
+            </div>
+            <div class="loadout-slot">
+              <div class="slot-label">Melee</div>
+              <div class="slot-value" id="wf-melee">Orthos Prime</div>
+            </div>
+            <div class="loadout-slot">
+              <div class="slot-label">Ability</div>
+              <div class="slot-value" id="wf-ability">Hall of Mirrors</div>
+            </div>
+          </div>
+          <div class="warframe-mods" id="wf-mods">
+            <span class="mod-tag">Serration</span>
+            <span class="mod-tag">Multishot</span>
+            <span class="mod-tag">Critical</span>
+            <span class="mod-tag">Status</span>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Featured Projects -->
+      <section class="card">
+        <div class="card-header">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          <h2 class="card-title">featured projects</h2>
+        </div>
+        <div class="projects-list">
+          <article class="project-item">
+            <a href="https://github.com/planetkosi/dragoon" target="_blank" rel="noopener" class="project-title"><img src="resources/emoji/robot.png" alt="🤖" class="emoji" loading="lazy" onerror="this.replaceWith(document.createTextNode(this.alt))"> Dragoon ↗</a>
+            <p class="project-desc">Next-gen Discord bot for moderation, analytics & custom commands. Built with performance and extensibility in mind.</p>
+            <div class="project-tags">
+              <span class="tag">TypeScript</span>
+              <span class="tag">Discord.js</span>
+              <span class="tag">SQLite</span>
+              <span class="tag">Node.js</span>
+            </div>
+          </article>
+          <article class="project-item">
+            <a href="#" class="project-title"><img src="resources/emoji/globe.png" alt="🌐" class="emoji" loading="lazy" onerror="this.replaceWith(document.createTextNode(this.alt))"> planetkosi.dev ↗</a>
+            <p class="project-desc">This portfolio. 100% vanilla HTML/CSS/JS — fast, accessible, animated. No frameworks, no build step.</p>
+            <div class="project-tags">
+              <span class="tag">HTML5</span>
+              <span class="tag">CSS Grid</span>
+              <span class="tag">Vanilla JS</span>
+            </div>
+          </article>
+        </div>
+      </section>
+      
+      <!-- LAST ROW: CONTACT CTA (Full Width) -->
+      <section class="card contact-cta">
+        <h2>ready to work together?</h2>
+        <p>Have a project in mind or want to chat about tech? I'm open to freelance work and collaborations.</p>
+        <a href="contact.html" class="btn btn-primary"><img src="resources/emoji/mailbox.png" alt="📬" class="emoji" loading="lazy" onerror="this.replaceWith(document.createTextNode(this.alt))"> Get in Touch</a>
+      </section>
+      
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-brand">kosi<span>.dev</span></div>
+      <span>·</span>
+      <span>building from Zimbabwe <img src="resources/emoji/zimbabwe.png" alt="🇿🇼" class="emoji" loading="lazy" onerror="this.replaceWith(document.createTextNode(this.alt))"></span>
+      <span>·</span>
+      <a href="https://github.com/planetkosi" target="_blank" rel="noopener" style="color:var(--text);text-decoration:none;">GitHub</a>
+    </footer>
+  </div>
 </body>
 </html>
