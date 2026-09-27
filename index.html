@@ -686,19 +686,19 @@
             <a href="https://www.last.fm/user/alwayskosi" target="_blank" rel="noopener" class="lastfm-username">@alwayskosi ↗</a>
           </div>
           <div class="now-playing">
-            <div class="album-art"></div>
+            <div class="album-art" id="lastfm-art"></div>
             <div class="track-info">
-              <div class="track-name">Arcade</div>
-              <div class="artist-name">Yukan</div>
+              <div class="track-name" id="lastfm-track">Arcade</div>
+              <div class="artist-name" id="lastfm-artist">Yukan</div>
             </div>
           </div>
           <div class="lastfm-stats">
             <div>
-              <div class="lastfm-stat-value">8,059</div>
+              <div class="lastfm-stat-value" id="lastfm-scrobbles">8,059</div>
               <div class="lastfm-stat-label">Scrobbles</div>
             </div>
             <div>
-              <div class="lastfm-stat-value">953</div>
+              <div class="lastfm-stat-value" id="lastfm-artists">953</div>
               <div class="lastfm-stat-label">Artists</div>
             </div>
           </div>
@@ -770,27 +770,27 @@
         </div>
         <div class="warframe-card">
           <div class="warframe-header">
-            <span class="warframe-name">🎭 Mirage Prime</span>
+            <span class="warframe-name" id="wf-name">🎭 Mirage Prime</span>
           </div>
           <div class="loadout-grid">
             <div class="loadout-slot">
               <div class="slot-label">Primary</div>
-              <div class="slot-value">Rubico Prime</div>
+              <div class="slot-value" id="wf-primary">Rubico Prime</div>
             </div>
             <div class="loadout-slot">
               <div class="slot-label">Secondary</div>
-              <div class="slot-value">Vasto Prime</div>
+              <div class="slot-value" id="wf-secondary">Vasto Prime</div>
             </div>
             <div class="loadout-slot">
               <div class="slot-label">Melee</div>
-              <div class="slot-value">Orthos Prime</div>
+              <div class="slot-value" id="wf-melee">Orthos Prime</div>
             </div>
             <div class="loadout-slot">
               <div class="slot-label">Ability</div>
-              <div class="slot-value">Hall of Mirrors</div>
+              <div class="slot-value" id="wf-ability">Hall of Mirrors</div>
             </div>
           </div>
-          <div class="warframe-mods">
+          <div class="warframe-mods" id="wf-mods">
             <span class="mod-tag">Serration</span>
             <span class="mod-tag">Multishot</span>
             <span class="mod-tag">Critical</span>
@@ -848,6 +848,29 @@
   </div>
   
   <script>
+    // =====================================================================
+    // SITE CONFIG — edit values here, no need to touch the HTML/CSS below.
+    // =====================================================================
+    const SITE_CONFIG = {
+      lastfm: {
+        username: 'alwayskosi',
+        // Free key, 2 minutes to get: https://www.last.fm/api/account/create
+        // Leave as-is to keep showing the static fallback numbers already in the HTML.
+        apiKey: '3ffbc4f35f673ffacbc340a0f9def89b',
+      },
+      // Warframe has no public API for a player's equipped loadout, so this
+      // stays manual — but now it's one object to edit instead of hunting
+      // through markup. Update these whenever your loadout changes.
+      warframe: {
+        warframeName: '🎭 Mirage Prime',
+        primary: 'Rubico Prime',
+        secondary: 'Vasto Prime',
+        melee: 'Orthos Prime',
+        ability: 'Hall of Mirrors',
+        mods: ['Serration', 'Multishot', 'Critical', 'Status'],
+      },
+    };
+
     // Theme sync
     const root = document.documentElement;
     const applyTheme = t => {
@@ -858,18 +881,104 @@
     const saved = localStorage.getItem('theme');
     if (saved) applyTheme(saved);
     else if (!window.matchMedia('(prefers-color-scheme: dark)').matches) applyTheme('light');
-    
-    // Card glow effect
+
+    // Card glow effect — throttled to one DOM write per animation frame
+    // instead of one per mousemove event, so it doesn't jank on scroll/hover.
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!prefersReduced) {
+      let pendingGlow = null;
+      let glowFrameQueued = false;
+      const flushGlow = () => {
+        glowFrameQueued = false;
+        if (!pendingGlow) return;
+        const { card, x, y } = pendingGlow;
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty('--glow-x', (x - rect.left) + 'px');
+        card.style.setProperty('--glow-y', (y - rect.top) + 'px');
+      };
       document.querySelectorAll('.card').forEach(card => {
         card.addEventListener('mousemove', e => {
-          const rect = card.getBoundingClientRect();
-          card.style.setProperty('--glow-x', (e.clientX - rect.left) + 'px');
-          card.style.setProperty('--glow-y', (e.clientY - rect.top) + 'px');
+          pendingGlow = { card, x: e.clientX, y: e.clientY };
+          if (!glowFrameQueued) {
+            glowFrameQueued = true;
+            requestAnimationFrame(flushGlow);
+          }
         });
       });
     }
+
+    // ---- Warframe loadout: render from SITE_CONFIG ----
+    function renderWarframeLoadout({ warframe }) {
+      const setText = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+      };
+      setText('wf-name', warframe.warframeName);
+      setText('wf-primary', warframe.primary);
+      setText('wf-secondary', warframe.secondary);
+      setText('wf-melee', warframe.melee);
+      setText('wf-ability', warframe.ability);
+
+      const modsEl = document.getElementById('wf-mods');
+      if (modsEl) {
+        modsEl.innerHTML = '';
+        warframe.mods.forEach(mod => {
+          const span = document.createElement('span');
+          span.className = 'mod-tag';
+          span.textContent = mod;
+          modsEl.appendChild(span);
+        });
+      }
+    }
+    renderWarframeLoadout(SITE_CONFIG);
+
+    // ---- Last.fm: fetch live scrobble count, artist count, now playing ----
+    async function loadLastFmStats({ lastfm }) {
+      const { username, apiKey } = lastfm;
+      if (!apiKey || apiKey === 'YOUR_LASTFM_API_KEY') {
+        console.warn('Last.fm: add your API key in SITE_CONFIG to enable live stats. Showing fallback values for now.');
+        return;
+      }
+
+      const base = 'https://ws.audioscrobbler.com/2.0/';
+      const setText = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+      };
+
+      try {
+        const infoUrl = `${base}?method=user.getinfo&user=${encodeURIComponent(username)}&api_key=${apiKey}&format=json`;
+        const infoRes = await fetch(infoUrl);
+        if (!infoRes.ok) throw new Error(`user.getinfo failed (${infoRes.status})`);
+        const infoData = await infoRes.json();
+        const user = infoData.user;
+        if (user) {
+          setText('lastfm-scrobbles', Number(user.playcount).toLocaleString());
+          setText('lastfm-artists', Number(user.artist_count).toLocaleString());
+        }
+
+        const recentUrl = `${base}?method=user.getrecenttracks&user=${encodeURIComponent(username)}&api_key=${apiKey}&format=json&limit=1`;
+        const recentRes = await fetch(recentUrl);
+        if (!recentRes.ok) throw new Error(`user.getrecenttracks failed (${recentRes.status})`);
+        const recentData = await recentRes.json();
+        const track = recentData?.recenttracks?.track?.[0];
+        if (track) {
+          setText('lastfm-track', track.name || '—');
+          setText('lastfm-artist', track.artist?.['#text'] || '—');
+          const art = track.image?.find(img => img.size === 'medium')?.['#text'];
+          const artEl = document.getElementById('lastfm-art');
+          if (art && artEl) {
+            artEl.style.backgroundImage = `url("${art}")`;
+            artEl.style.backgroundSize = 'cover';
+            artEl.style.backgroundPosition = 'center';
+          }
+        }
+      } catch (err) {
+        // Network hiccup or bad key: leave the static fallback values in place.
+        console.warn('Last.fm: could not load live stats, showing fallback values.', err);
+      }
+    }
+    loadLastFmStats(SITE_CONFIG);
   </script>
 </body>
 </html>
