@@ -16,20 +16,19 @@
         username: 'alwayskosi',
         apiKey: '3ffbc4f35f673ffacbc340a0f9def89b',
       },
+
       warframe: {
-        warframeName: '🐵 Wukong Prime',
-        primary: 'Braton Prime',
+        icon: '🐵',
+        iconFile: 'warframe.png', 
+        warframeName: 'Wukong Prime',
+        primary: 'Burston Prime',
         secondary: 'Lex Prime',
         melee: 'Orthos Prime',
         ability: 'Hall of Mirrors',
         mods: ['Serration', 'Multishot', 'Critical', 'Status'],
       },
     };
-
-    // Theme sync — runs immediately, before <style> is even parsed, so the
-    // page paints in the right theme the first time instead of flashing
-    // dark-then-light. <html> and the <meta> tags above already exist at
-    // this point, even though <body> hasn't been parsed yet.
+  
     (function () {
       const root = document.documentElement;
       const applyTheme = t => {
@@ -42,13 +41,7 @@
       else if (!window.matchMedia('(prefers-color-scheme: dark)').matches) applyTheme('light');
     })();
 
-    // Everything below touches elements further down the page (cards,
-    // warframe/last.fm fields), so it waits until the DOM is actually
-    // built. Registering the listener up here is fine — it just fires
-    // once parsing reaches the closing </body>.
     document.addEventListener('DOMContentLoaded', () => {
-      // Card glow effect — throttled to one DOM write per animation frame
-      // instead of one per mousemove event, so it doesn't jank on scroll/hover.
       const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (!prefersReduced) {
         let pendingGlow = null;
@@ -72,13 +65,15 @@
         });
       }
 
-      // ---- Warframe loadout: render from SITE_CONFIG ----
       function renderWarframeLoadout({ warframe }) {
         const setText = (id, value) => {
           const el = document.getElementById(id);
           if (el) el.textContent = value;
         };
-        setText('wf-name', warframe.warframeName);
+        const nameEl = document.getElementById('wf-name');
+        if (nameEl) {
+          nameEl.innerHTML = `<img src="resources/emoji/${warframe.iconFile}" alt="${warframe.icon}" class="emoji" loading="lazy" onerror="this.replaceWith(document.createTextNode(this.alt))"> ${warframe.warframeName}`;
+        }
         setText('wf-primary', warframe.primary);
         setText('wf-secondary', warframe.secondary);
         setText('wf-melee', warframe.melee);
@@ -97,7 +92,6 @@
       }
       renderWarframeLoadout(SITE_CONFIG);
 
-      // ---- Last.fm: fetch live scrobble count, artist count, now playing ----
       async function loadLastFmStats({ lastfm }) {
         const { username, apiKey } = lastfm;
         if (!apiKey || apiKey === 'YOUR_LASTFM_API_KEY') {
@@ -139,7 +133,6 @@
             }
           }
         } catch (err) {
-          // Network hiccup or bad key: leave the static fallback values in place.
           console.warn('Last.fm: could not load live stats, showing fallback values.', err);
         }
       }
@@ -185,7 +178,16 @@
     }
     
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    
+
+    /* Custom emoji images sized to sit inline like a text character */
+    .emoji {
+      height: 1em;
+      width: 1em;
+      display: inline-block;
+      vertical-align: -0.15em;
+      object-fit: contain;
+    }
+
     body {
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       background: var(--bg);
@@ -691,7 +693,7 @@
     <section class="hero">
       <img src="resources/image.png" alt="kosi" class="avatar" />
       <h1>kosi</h1>
-      <div class="location">🇿🇼 Harare, Zimbabwe</div>
+      <div class="location"><img src="resources/emoji/zimbabwe.png" alt="🇿🇼" class="emoji" loading="lazy" onerror="this.replaceWith(document.createTextNode(this.alt))"> Harare, Zimbabwe</div>
     </section>
     
     <!-- BENTO GRID -->
@@ -853,7 +855,7 @@
           <h2 class="card-title">new project</h2>
         </div>
         <div class="project-highlight">
-          <div class="project-badge">🚀 In Development</div>
+          <div class="project-badge"><img src="resources/emoji/rocket.png" alt="🚀" class="emoji" loading="lazy" onerror="this.replaceWith(document.createTextNode(this.alt))"> In Development</div>
           <h3 style="font-size:1.1rem;font-weight:700;margin:0;">Dragoon v2.0</h3>
           <p class="project-desc">Complete rewrite of Dragoon with modular architecture, real-time analytics dashboard, and advanced permission system.</p>
           <div class="project-tech">
@@ -910,7 +912,7 @@
         </div>
         <div class="projects-list">
           <article class="project-item">
-            <a href="https://github.com/planetkosi/dragoon" target="_blank" rel="noopener" class="project-title">🤖 Dragoon ↗</a>
+            <a href="https://github.com/planetkosi/dragoon" target="_blank" rel="noopener" class="project-title"><img src="resources/emoji/robot.png" alt="🤖" class="emoji" loading="lazy" onerror="this.replaceWith(document.createTextNode(this.alt))"> Dragoon ↗</a>
             <p class="project-desc">Next-gen Discord bot for moderation, analytics & custom commands. Built with performance and extensibility in mind.</p>
             <div class="project-tags">
               <span class="tag">TypeScript</span>
@@ -920,7 +922,7 @@
             </div>
           </article>
           <article class="project-item">
-            <a href="#" class="project-title">🌐 planetkosi.dev ↗</a>
+            <a href="#" class="project-title"><img src="resources/emoji/globe.png" alt="🌐" class="emoji" loading="lazy" onerror="this.replaceWith(document.createTextNode(this.alt))"> planetkosi.dev ↗</a>
             <p class="project-desc">This portfolio. 100% vanilla HTML/CSS/JS — fast, accessible, animated. No frameworks, no build step.</p>
             <div class="project-tags">
               <span class="tag">HTML5</span>
@@ -935,7 +937,7 @@
       <section class="card contact-cta">
         <h2>ready to work together?</h2>
         <p>Have a project in mind or want to chat about tech? I'm open to freelance work and collaborations.</p>
-        <a href="contact.html" class="btn btn-primary">📬 Get in Touch</a>
+        <a href="contact.html" class="btn btn-primary"><img src="resources/emoji/mailbox.png" alt="📬" class="emoji" loading="lazy" onerror="this.replaceWith(document.createTextNode(this.alt))"> Get in Touch</a>
       </section>
       
     </div>
@@ -944,7 +946,7 @@
     <footer class="footer">
       <div class="footer-brand">kosi<span>.dev</span></div>
       <span>·</span>
-      <span>building from Zimbabwe 🇿🇼</span>
+      <span>building from Zimbabwe <img src="resources/emoji/zimbabwe.png" alt="🇿🇼" class="emoji" loading="lazy" onerror="this.replaceWith(document.createTextNode(this.alt))"></span>
       <span>·</span>
       <a href="https://github.com/planetkosi" target="_blank" rel="noopener" style="color:var(--text);text-decoration:none;">GitHub</a>
     </footer>
