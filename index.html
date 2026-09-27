@@ -13,7 +13,7 @@
   <script>
     const SITE_CONFIG = {
       lastfm: {
-        username: 'alwayskosi',
+        username: 'planetkosi',
         apiKey: '3ffbc4f35f673ffacbc340a0f9def89b',
       },
 
@@ -157,7 +157,6 @@
       --radius: 16px;
       --radius-sm: 10px;
       --transition: 0.2s ease;
-      /* Glassmorphism */
       --glass-bg: rgba(20, 20, 30, 0.4);
       --glass-border: rgba(255, 255, 255, 0.12);
       --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
@@ -179,7 +178,6 @@
     
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* Custom emoji images sized to sit inline like a text character */
     .emoji {
       height: 1em;
       width: 1em;
@@ -198,10 +196,7 @@
       overflow-x: hidden;
     }
     
-    /* ========== BACKGROUND: self-contained aurora + starfield ==========
-       No external image request, no 270-value box-shadow star hack.
-       Both layers animate only `transform`, so the browser composites
-       them on the GPU instead of repainting every frame. */
+
     .bg {
       position: fixed;
       inset: -12%;
@@ -264,7 +259,6 @@
     
     .container { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; position: relative; z-index: 1; }
     
-    /* Hero - Minimal */
     .hero {
       text-align: center;
       padding: 3rem 1rem 2rem;
@@ -305,7 +299,6 @@
       gap: 0.4rem;
     }
     
-    /* BENTO GRID - Flexible */
     .bento-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -313,7 +306,6 @@
       align-items: start;
     }
     
-    /* Card base with Glassmorphism */
     .card {
       background: var(--glass-bg);
       border: 1px solid var(--glass-border);
@@ -333,7 +325,6 @@
       transform: translateY(-3px);
     }
     
-    /* Subtle glow on hover */
     .card::before {
       content: '';
       position: absolute;
@@ -360,13 +351,11 @@
     .card-icon { width: 24px; height: 24px; color: var(--muted); }
     .card-title { font-size: 1.1rem; font-weight: 700; text-transform: lowercase; letter-spacing: 0.02em; }
     
-    /* Full-width cards (About, Contact CTA) */
     .bento-grid > .card:first-child,
     .bento-grid > .card:last-child {
       grid-column: 1 / -1;
     }
     
-    /* Skills */
     .skills-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
@@ -386,7 +375,6 @@
       transform: scale(1.05);
     }
     
-    /* Availability */
     .availability-badge {
       display: inline-flex;
       align-items: center;
@@ -407,7 +395,6 @@
     }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
     
-    /* Learning Progress */
     .learning-list { display: flex; flex-direction: column; gap: 0.75rem; }
     .learning-item { display: flex; justify-content: space-between; align-items: center; }
     .learning-name { font-size: 0.9rem; }
@@ -426,7 +413,6 @@
       transition: width 0.5s ease;
     }
     
-    /* Last.fm Card */
     .lastfm-card { display: flex; flex-direction: column; gap: 1rem; }
     .lastfm-header {
       display: flex;
@@ -486,7 +472,6 @@
       letter-spacing: 0.05em;
     }
     
-    /* Favorite Songs */
     .songs-list { display: flex; flex-direction: column; gap: 0.75rem; }
     .song-item {
       display: flex;
@@ -513,7 +498,6 @@
     .song-title { font-weight: 600; font-size: 0.9rem; }
     .song-artist { font-size: 0.75rem; color: var(--muted); }
     
-    /* New Project Card */
     .project-highlight {
       display: flex;
       flex-direction: column;
@@ -540,7 +524,6 @@
       border-radius: 6px;
     }
     
-    /* Warframe Loadout */
     .warframe-card { display: flex; flex-direction: column; gap: 1rem; }
     .warframe-header {
       display: flex;
@@ -591,7 +574,6 @@
       color: var(--warframe);
     }
     
-    /* Projects List */
     .projects-list { display: flex; flex-direction: column; gap: 1rem; }
     .project-item {
       padding: 1rem;
@@ -619,7 +601,6 @@
       border-radius: 6px;
     }
     
-    /* Contact CTA */
     .contact-cta {
       text-align: center;
       display: flex;
@@ -653,7 +634,6 @@
       transform: translateY(-2px);
     }
     
-    /* Footer */
     .footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
@@ -668,7 +648,6 @@
     .footer-brand { font-weight: 700; color: var(--text); }
     .footer-brand span { font-weight: 400; }
     
-    /* Responsive */
     @media (max-width: 768px) {
       .hero h1 { font-size: 1.75rem; }
       .loadout-grid { grid-template-columns: 1fr; }
