@@ -1,377 +1,872 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#0a0a0a" />
-  <title>contact · kosi</title>
-  <link rel="icon" type="image/svg+xml" href="resources/icon.svg" />
-  <style>
-    :root {
-      --bg: #080810;
-      --bg-card: #0f0f1a;
-      --bg-card-hover: #141422;
-      --text: #ededf0;
-      --muted: #7070a0;
-      --border: #1e1e32;
-      --border-hover: #2e2e50;
-      --accent: #00c46a;
-      --accent-dim: rgba(0,196,106,0.12);
-      --discord: #5865F2;
-      --discord-dim: rgba(88,101,242,0.12);
-      --radius: 18px;
-      --radius-sm: 12px;
-      --t: 0.2s ease;
-      --nebula-1: rgba(80,40,160,0.25);
-      --nebula-2: rgba(30,80,200,0.15);
-      --nebula-3: rgba(160,30,120,0.12);
-    }
-    [data-theme="light"] {
-      --bg: #f0f0f8;
-      --bg-card: #ffffff;
-      --bg-card-hover: #fafaff;
-      --text: #0a0a18;
-      --muted: #6060a0;
-      --border: #e0e0f0;
-      --border-hover: #c0c0e0;
-      --accent: #008848;
-      --accent-dim: rgba(0,136,72,0.08);
-      --discord-dim: rgba(88,101,242,0.06);
-    }
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
-      background: var(--bg); color: var(--text);
-      line-height: 1.6; min-height: 100vh;
-      overflow-x: hidden; position: relative;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <title>contact · kosi</title>
+    <link rel="icon" type="image/svg+xml" href="resources/icon.svg" />
+    <style>
+      :root {
+        --bg: #080810;
+        --bg-card: #0f0f1a;
+        --bg-card-hover: #141422;
+        --text: #ededf0;
+        --muted: #7070a0;
+        --border: #1e1e32;
+        --border-hover: #2e2e50;
+        --accent: #00c46a;
+        --accent-dim: rgba(0, 196, 106, 0.12);
+        --discord: #5865F2;
+        --discord-dim: rgba(88, 101, 242, 0.12);
+        --radius: 18px;
+        --radius-sm: 12px;
+        --t: 0.2s ease;
+        --nebula-1: rgba(80, 40, 160, 0.25);
+        --nebula-2: rgba(30, 80, 200, 0.15);
+        --nebula-3: rgba(160, 30, 120, 0.12);
+      }
 
-    /* ── BG ── */
-    .galaxy {
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      background:
-        radial-gradient(ellipse 60% 50% at 10% 15%, var(--nebula-1), transparent),
-        radial-gradient(ellipse 50% 60% at 90% 85%, var(--nebula-2), transparent),
-        radial-gradient(ellipse 40% 40% at 55% 50%, var(--nebula-3), transparent);
-      animation: nbRotate 80s linear infinite;
-    }
-    @keyframes nbRotate { to { transform: rotate(360deg) scale(1.1); } }
-    canvas#stars { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.6; }
-    .planet { position: fixed; border-radius: 50%; z-index: 0; pointer-events: none; opacity: 0.55; animation: floatP 50s ease-in-out infinite; }
-    .p1 { width: 72px; height: 72px; top: 12%; left: 7%; background: radial-gradient(circle at 35% 35%, #ff7eb3, #b03070); box-shadow: 0 0 40px rgba(255,100,160,0.3); }
-    .p2 { width: 110px; height: 110px; top: 65%; right: 8%; background: radial-gradient(circle at 40% 40%, #5ce8de, #1a8a80); box-shadow: 0 0 50px rgba(60,200,190,0.25); animation-delay: -15s; }
-    @keyframes floatP { 0%,100% { transform:translate(0,0); } 25% { transform:translate(8px,-12px); } 50% { transform:translate(-4px,9px); } 75% { transform:translate(12px,4px); } }
-    .shoot { position: fixed; z-index: 0; pointer-events: none; width: 2px; height: 90px; top: -100px; background: linear-gradient(180deg, transparent, rgba(255,255,255,0.75), transparent); opacity: 0; animation: shootA 9s ease-in-out infinite; }
-    .shoot:nth-child(1) { right: 18%; }
-    .shoot:nth-child(2) { right: 55%; animation-delay: 3s; }
-    @keyframes shootA { 0% { transform: translateY(0) rotate(40deg); opacity: 0; } 8% { opacity: 0.9; } 28% { transform: translateY(100vh) rotate(40deg); opacity: 0; } 100% { opacity: 0; } }
+      [data-theme="light"] {
+        --bg: #f0f0f8;
+        --bg-card: #ffffff;
+        --bg-card-hover: #fafaff;
+        --text: #0a0a18;
+        --muted: #6060a0;
+        --border: #e0e0f0;
+        --border-hover: #c0c0e0;
+        --accent: #008848;
+        --accent-dim: rgba(0, 136, 72, 0.08);
+        --discord-dim: rgba(88, 101, 242, 0.06);
+      }
 
-    /* ── LAYOUT ── */
-    .wrap { max-width: 680px; margin: 0 auto; padding: 2rem 1.25rem 4rem; position: relative; z-index: 1; }
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    /* ── NAV ── */
-    nav { display: flex; align-items: center; justify-content: space-between; padding: 1rem 0 2.5rem; }
-    .nav-logo { font-weight: 700; font-size: 1rem; letter-spacing: 0.05em; color: var(--text); text-decoration: none; }
-    .nav-logo span { color: var(--accent); }
-    .nav-right { display: flex; gap: 0.5rem; align-items: center; }
-    .nav-link { font-size: 0.8rem; color: var(--muted); text-decoration: none; padding: 0.4rem 0.9rem; border-radius: 999px; border: 1px solid var(--border); transition: all var(--t); }
-    .nav-link:hover, .nav-link.active { color: var(--text); border-color: var(--border-hover); background: var(--bg-card); }
-    .theme-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); color: var(--muted); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; transition: all var(--t); }
-    .theme-btn:hover { border-color: var(--border-hover); color: var(--text); }
+      html {
+        scroll-behavior: smooth;
+      }
 
-    /* ── PAGE HEADER ── */
-    .page-header { text-align: center; padding: 1rem 1rem 2.5rem; }
-    .avatar { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); background: var(--bg-card); margin-bottom: 1.25rem; transition: transform var(--t); }
-    .avatar:hover { transform: scale(1.05); }
-    .page-header h1 { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.4rem; }
-    .page-header p { color: var(--muted); font-size: 0.875rem; }
+      body {
+        font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+        min-height: 100vh;
+        overflow-x: hidden;
+        position: relative;
+      }
 
-    /* ── CARD ── */
-    .card {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1.5rem; margin-bottom: 0.875rem;
-      position: relative; overflow: hidden;
-      transition: border-color var(--t), background var(--t), transform 0.25s, box-shadow 0.25s;
-    }
-    .card:hover { border-color: var(--border-hover); background: var(--bg-card-hover); transform: translateY(-2px); box-shadow: 0 10px 36px rgba(0,0,0,0.3); }
-    .card::after {
-      content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
-      background: radial-gradient(500px circle at var(--mx,50%) var(--my,50%), rgba(0,196,106,0.06), transparent 55%);
-      opacity: 0; transition: opacity 0.3s;
-    }
-    .card:hover::after { opacity: 1; }
-    .card > * { position: relative; z-index: 1; }
+      /* ── BG ── */
+      .galaxy {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background:
+          radial-gradient(ellipse 60% 50% at 10% 15%, var(--nebula-1), transparent),
+          radial-gradient(ellipse 50% 60% at 90% 85%, var(--nebula-2), transparent),
+          radial-gradient(ellipse 40% 40% at 55% 50%, var(--nebula-3), transparent);
+        animation: nbRotate 80s linear infinite;
+      }
 
-    .ch { display: flex; align-items: center; gap: 0.625rem; margin-bottom: 1.25rem; padding-bottom: 0.875rem; border-bottom: 1px solid var(--border); }
-    .ch svg { width: 18px; height: 18px; color: var(--muted); flex-shrink: 0; }
-    .ch h2 { font-size: 0.875rem; font-weight: 600; text-transform: lowercase; letter-spacing: 0.04em; }
+      @keyframes nbRotate {
+        to {
+          transform: rotate(360deg) scale(1.1);
+        }
+      }
 
-    /* ── DISCORD PROFILE ── */
-    .discord-block {
-      background: var(--discord-dim);
-      border: 1px solid rgba(88,101,242,0.2);
-      border-radius: var(--radius-sm); padding: 1.25rem; margin-bottom: 1rem;
-    }
-    .dc-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; }
-    .dc-avatar { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--discord); background: var(--discord); object-fit: cover; flex-shrink: 0; }
-    .dc-name { font-size: 1rem; font-weight: 700; margin-bottom: 0.2rem; }
-    .dc-id { font-size: 0.75rem; color: var(--muted); }
-    .dc-online {
-      display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.4rem;
-      padding: 0.25rem 0.65rem; background: rgba(88,101,242,0.15);
-      border-radius: 999px; font-size: 0.75rem; font-weight: 600; color: var(--discord);
-    }
-    .dc-dot { width: 6px; height: 6px; border-radius: 50%; background: #23c55e; animation: pulse 2s infinite; }
-    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
-    .dc-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem; }
-    .dcbtn {
-      display: flex; align-items: center; justify-content: center; gap: 0.45rem;
-      padding: 0.65rem 1rem; border-radius: var(--radius-sm);
-      font-size: 0.8rem; font-weight: 700; text-decoration: none;
-      transition: all var(--t); border: 1px solid transparent; cursor: pointer; font-family: inherit;
-    }
-    .dcbtn-fill { background: var(--discord); color: #fff; border-color: var(--discord); }
-    .dcbtn-fill:hover { filter: brightness(1.15); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(88,101,242,0.4); }
-    .dcbtn-outline { background: transparent; color: var(--discord); border-color: rgba(88,101,242,0.4); }
-    .dcbtn-outline:hover { background: rgba(88,101,242,0.1); border-color: var(--discord); }
+      canvas#stars {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.6;
+      }
 
-    /* ── SERVER ── */
-    .server-row { display: flex; align-items: center; gap: 0.875rem; margin-bottom: 0.875rem; }
-    .server-icon { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--discord); object-fit: cover; flex-shrink: 0; }
-    .server-name { font-size: 1rem; font-weight: 700; margin-bottom: 0.2rem; }
-    .server-online { display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; color: var(--muted); }
-    .green-dot { width: 6px; height: 6px; border-radius: 50%; background: #23c55e; }
-    .server-desc { font-size: 0.825rem; color: var(--muted); line-height: 1.65; margin-bottom: 0.875rem; }
-    .feature-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
-    .ftag { font-size: 0.7rem; padding: 0.2rem 0.55rem; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--muted); }
-    .join-btn {
-      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-      width: 100%; padding: 0.75rem; background: var(--discord); color: #fff;
-      border-radius: var(--radius-sm); font-size: 0.875rem; font-weight: 700;
-      text-decoration: none; transition: all var(--t);
-    }
-    .join-btn:hover { filter: brightness(1.12); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(88,101,242,0.4); }
+      .planet {
+        position: fixed;
+        border-radius: 50%;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.55;
+        animation: floatP 50s ease-in-out infinite;
+      }
 
-    /* ── CONTACT LIST ── */
-    .contact-list { border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border); }
-    .ci {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 1rem 1.125rem; background: var(--bg);
-      border-bottom: 1px solid var(--border);
-      text-decoration: none; color: var(--text);
-      transition: background var(--t), border-color var(--t);
-    }
-    .ci:last-child { border-bottom: none; }
-    .ci:hover { background: var(--bg-card); }
-    .ci-left { display: flex; align-items: center; gap: 0.875rem; }
-    .ci-icon { width: 18px; height: 18px; color: var(--muted); flex-shrink: 0; }
-    .ci-label { font-size: 0.875rem; font-weight: 600; margin-bottom: 0.1rem; }
-    .ci-sub { font-size: 0.75rem; color: var(--muted); }
-    .ci-arrow { font-size: 0.75rem; color: var(--muted); opacity: 0; transition: opacity var(--t), transform var(--t); }
-    .ci:hover .ci-arrow { opacity: 1; transform: translate(2px,-2px); }
+      .p1 {
+        width: 72px;
+        height: 72px;
+        top: 12%;
+        left: 7%;
+        background: radial-gradient(circle at 35% 35%, #ff7eb3, #b03070);
+        box-shadow: 0 0 40px rgba(255, 100, 160, 0.3);
+      }
 
-    /* ── TIP BOX ── */
-    .tip {
-      margin-top: 1rem; padding: 1rem 1.125rem;
-      background: var(--accent-dim); border: 1px dashed var(--accent);
-      border-radius: var(--radius-sm); font-size: 0.825rem; color: var(--muted); line-height: 1.65;
-    }
-    .tip strong { color: var(--text); }
+      .p2 {
+        width: 110px;
+        height: 110px;
+        top: 65%;
+        right: 8%;
+        background: radial-gradient(circle at 40% 40%, #5ce8de, #1a8a80);
+        box-shadow: 0 0 50px rgba(60, 200, 190, 0.25);
+        animation-delay: -15s;
+      }
 
-    /* ── FOOTER ── */
-    footer { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: center; gap: 1rem; font-size: 0.8rem; color: var(--muted); flex-wrap: wrap; }
-    footer strong { color: var(--text); }
+      @keyframes floatP {
 
-    @media (max-width: 480px) {
-      .dc-btns { grid-template-columns: 1fr; }
-      .page-header h1 { font-size: 1.5rem; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before { animation: none !important; transition-duration: 0.01ms !important; }
-    }
-  </style>
-</head>
-<body>
-  <div class="galaxy"></div>
-  <canvas id="stars"></canvas>
-  <div class="planet p1"></div>
-  <div class="planet p2"></div>
-  <div class="shoot"></div>
-  <div class="shoot"></div>
+        0%,
+        100% {
+          transform: translate(0, 0);
+        }
 
-  <div class="wrap">
-    <nav>
-      <a href="index.html" class="nav-logo">kosi<span>.dev</span></a>
-      <div class="nav-right">
-        <a href="index.html" class="nav-link">home</a>
-        <a href="contact.html" class="nav-link active">contact</a>
-        <button class="theme-btn" id="themeBtn" aria-label="Toggle theme">☀️</button>
-      </div>
-    </nav>
+        25% {
+          transform: translate(8px, -12px);
+        }
 
-    <header class="page-header">
-      <img src="resources/image.png" alt="kosi" class="avatar" />
-      <h1>let's connect</h1>
-      <p>have a project in mind or just want to chat?</p>
-    </header>
+        50% {
+          transform: translate(-4px, 9px);
+        }
 
-    <!-- DISCORD PROFILE -->
-    <section class="card">
-      <div class="ch">
-        <svg viewBox="0 0 24 24" fill="currentColor" style="color:#5865F2"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03ZM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.956 2.418-2.157 2.418Zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.947 2.418-2.157 2.418Z"/></svg>
-        <h2>my discord profile</h2>
-      </div>
-      <div class="discord-block">
-        <div class="dc-header">
-          <img
-            src="https://cdn.discordapp.com/avatars/1369005951637655756/a8e9871d7c8ae14f6dba6b9facf02079.png"
-            alt="planetkosii's avatar" class="dc-avatar"
-            onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'"
-          />
+        75% {
+          transform: translate(12px, 4px);
+        }
+      }
+
+      .shoot {
+        position: fixed;
+        z-index: 0;
+        pointer-events: none;
+        width: 2px;
+        height: 90px;
+        top: -100px;
+        background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.75), transparent);
+        opacity: 0;
+        animation: shootA 9s ease-in-out infinite;
+      }
+
+      .shoot:nth-child(1) {
+        right: 18%;
+      }
+
+      .shoot:nth-child(2) {
+        right: 55%;
+        animation-delay: 3s;
+      }
+
+      @keyframes shootA {
+        0% {
+          transform: translateY(0) rotate(40deg);
+          opacity: 0;
+        }
+
+        8% {
+          opacity: 0.9;
+        }
+
+        28% {
+          transform: translateY(100vh) rotate(40deg);
+          opacity: 0;
+        }
+
+        100% {
+          opacity: 0;
+        }
+      }
+
+      /* ── LAYOUT ── */
+      .wrap {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 2rem 1.25rem 4rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* ── NAV ── */
+      nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 0 2.5rem;
+      }
+
+      .nav-logo {
+        font-weight: 700;
+        font-size: 1rem;
+        letter-spacing: 0.05em;
+        color: var(--text);
+        text-decoration: none;
+      }
+
+      .nav-logo span {
+        color: var(--accent);
+      }
+
+      .nav-right {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+      }
+
+      .nav-link {
+        font-size: 0.8rem;
+        color: var(--muted);
+        text-decoration: none;
+        padding: 0.4rem 0.9rem;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        transition: all var(--t);
+      }
+
+      .nav-link:hover,
+      .nav-link.active {
+        color: var(--text);
+        border-color: var(--border-hover);
+        background: var(--bg-card);
+      }
+
+      .theme-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 1px solid var(--border);
+        background: var(--bg-card);
+        color: var(--muted);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        transition: all var(--t);
+      }
+
+      .theme-btn:hover {
+        border-color: var(--border-hover);
+        color: var(--text);
+      }
+
+      /* ── PAGE HEADER ── */
+      .page-header {
+        text-align: center;
+        padding: 1rem 1rem 2.5rem;
+      }
+
+      .avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--border);
+        background: var(--bg-card);
+        margin-bottom: 1.25rem;
+        transition: transform var(--t);
+      }
+
+      .avatar:hover {
+        transform: scale(1.05);
+      }
+
+      .page-header h1 {
+        font-size: 1.8rem;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        margin-bottom: 0.4rem;
+      }
+
+      .page-header p {
+        color: var(--muted);
+        font-size: 0.875rem;
+      }
+
+      /* ── CARD ── */
+      .card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.5rem;
+        margin-bottom: 0.875rem;
+        position: relative;
+        overflow: hidden;
+        transition: border-color var(--t), background var(--t), transform 0.25s, box-shadow 0.25s;
+      }
+
+      .card:hover {
+        border-color: var(--border-hover);
+        background: var(--bg-card-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 36px rgba(0, 0, 0, 0.3);
+      }
+
+      .card::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+        background: radial-gradient(500px circle at var(--mx, 50%) var(--my, 50%), rgba(0, 196, 106, 0.06), transparent 55%);
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      .card:hover::after {
+        opacity: 1;
+      }
+
+      .card>* {
+        position: relative;
+        z-index: 1;
+      }
+
+      .ch {
+        display: flex;
+        align-items: center;
+        gap: 0.625rem;
+        margin-bottom: 1.25rem;
+        padding-bottom: 0.875rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .ch svg {
+        width: 18px;
+        height: 18px;
+        color: var(--muted);
+        flex-shrink: 0;
+      }
+
+      .ch h2 {
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-transform: lowercase;
+        letter-spacing: 0.04em;
+      }
+
+      /* ── DISCORD PROFILE ── */
+      .discord-block {
+        background: var(--discord-dim);
+        border: 1px solid rgba(88, 101, 242, 0.2);
+        border-radius: var(--radius-sm);
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+      }
+
+      .dc-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+      }
+
+      .dc-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: 2px solid var(--discord);
+        background: var(--discord);
+        object-fit: cover;
+        flex-shrink: 0;
+      }
+
+      .dc-name {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 0.2rem;
+      }
+
+      .dc-id {
+        font-size: 0.75rem;
+        color: var(--muted);
+      }
+
+      .dc-online {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        margin-top: 0.4rem;
+        padding: 0.25rem 0.65rem;
+        background: rgba(88, 101, 242, 0.15);
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--discord);
+      }
+
+      .dc-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #23c55e;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+
+        0%,
+        100% {
+          opacity: 1;
+        }
+
+        50% {
+          opacity: 0.4;
+        }
+      }
+
+      .dc-btns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.625rem;
+      }
+
+      .dcbtn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45rem;
+        padding: 0.65rem 1rem;
+        border-radius: var(--radius-sm);
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all var(--t);
+        border: 1px solid transparent;
+        cursor: pointer;
+        font-family: inherit;
+      }
+
+      .dcbtn-fill {
+        background: var(--discord);
+        color: #fff;
+        border-color: var(--discord);
+      }
+
+      .dcbtn-fill:hover {
+        filter: brightness(1.15);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(88, 101, 242, 0.4);
+      }
+
+      .dcbtn-outline {
+        background: transparent;
+        color: var(--discord);
+        border-color: rgba(88, 101, 242, 0.4);
+      }
+
+      .dcbtn-outline:hover {
+        background: rgba(88, 101, 242, 0.1);
+        border-color: var(--discord);
+      }
+
+      /* ── SERVER ── */
+      .server-row {
+        display: flex;
+        align-items: center;
+        gap: 0.875rem;
+        margin-bottom: 0.875rem;
+      }
+
+      .server-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 2px solid var(--discord);
+        object-fit: cover;
+        flex-shrink: 0;
+      }
+
+      .server-name {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 0.2rem;
+      }
+
+      .server-online {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.75rem;
+        color: var(--muted);
+      }
+
+      .green-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #23c55e;
+      }
+
+      .server-desc {
+        font-size: 0.825rem;
+        color: var(--muted);
+        line-height: 1.65;
+        margin-bottom: 0.875rem;
+      }
+
+      .feature-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-bottom: 1rem;
+      }
+
+      .ftag {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.55rem;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--muted);
+      }
+
+      .join-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+        padding: 0.75rem;
+        background: var(--discord);
+        color: #fff;
+        border-radius: var(--radius-sm);
+        font-size: 0.875rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all var(--t);
+      }
+
+      .join-btn:hover {
+        filter: brightness(1.12);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(88, 101, 242, 0.4);
+      }
+
+      /* ── CONTACT LIST ── */
+      .contact-list {
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+
+      .ci {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 1.125rem;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+        text-decoration: none;
+        color: var(--text);
+        transition: background var(--t), border-color var(--t);
+      }
+
+      .ci:last-child {
+        border-bottom: none;
+      }
+
+      .ci:hover {
+        background: var(--bg-card);
+      }
+
+      .ci-left {
+        display: flex;
+        align-items: center;
+        gap: 0.875rem;
+      }
+
+      .ci-icon {
+        width: 18px;
+        height: 18px;
+        color: var(--muted);
+        flex-shrink: 0;
+      }
+
+      .ci-label {
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 0.1rem;
+      }
+
+      .ci-sub {
+        font-size: 0.75rem;
+        color: var(--muted);
+      }
+
+      .ci-arrow {
+        font-size: 0.75rem;
+        color: var(--muted);
+        opacity: 0;
+        transition: opacity var(--t), transform var(--t);
+      }
+
+      .ci:hover .ci-arrow {
+        opacity: 1;
+        transform: translate(2px, -2px);
+      }
+
+      /* ── TIP BOX ── */
+      .tip {
+        margin-top: 1rem;
+        padding: 1rem 1.125rem;
+        background: var(--accent-dim);
+        border: 1px dashed var(--accent);
+        border-radius: var(--radius-sm);
+        font-size: 0.825rem;
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      .tip strong {
+        color: var(--text);
+      }
+
+      /* ── FOOTER ── */
+      footer {
+        margin-top: 2.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        font-size: 0.8rem;
+        color: var(--muted);
+        flex-wrap: wrap;
+      }
+
+      footer strong {
+        color: var(--text);
+      }
+
+      @media (max-width: 480px) {
+        .dc-btns {
+          grid-template-columns: 1fr;
+        }
+
+        .page-header h1 {
+          font-size: 1.5rem;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+
+        *,
+        *::before {
+          animation: none !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="galaxy"></div>
+    <canvas id="stars"></canvas>
+    <div class="planet p1"></div>
+    <div class="planet p2"></div>
+    <div class="shoot"></div>
+    <div class="shoot"></div>
+    <div class="wrap">
+      <nav>
+        <a href="index.html" class="nav-logo">kosi <span>.dev</span>
+        </a>
+        <div class="nav-right">
+          <a href="index.html" class="nav-link">home</a>
+          <a href="contact.html" class="nav-link active">contact</a>
+          <button class="theme-btn" id="themeBtn" aria-label="Toggle theme">☀️</button>
+        </div>
+      </nav>
+      <header class="page-header">
+        <img src="resources/image.png" alt="kosi" class="avatar" />
+        <h1>let's connect</h1>
+        <p>have a project in mind or just want to chat?</p>
+      </header>
+      <!-- DISCORD PROFILE -->
+      <section class="card">
+        <div class="ch">
+          <svg viewBox="0 0 24 24" fill="currentColor" style="color:#5865F2">
+            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03ZM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.956 2.418-2.157 2.418Zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.947 2.418-2.157 2.418Z" />
+          </svg>
+          <h2>my discord profile</h2>
+        </div>
+        <div class="discord-block">
+          <div class="dc-header">
+            <img src="https://cdn.discordapp.com/avatars/1369005951637655756/a8e9871d7c8ae14f6dba6b9facf02079.png" alt="planetkosii's avatar" class="dc-avatar" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'" />
+            <div>
+              <div class="dc-name">@planetkosii</div>
+              <div class="dc-id">ID: 1369005951637655756</div>
+              <div class="dc-online">
+                <span class="dc-dot"></span> online
+              </div>
+            </div>
+          </div>
+          <div class="dc-btns">
+            <a href="https://discord.com/users/1369005951637655756" target="_blank" rel="noopener" class="dcbtn dcbtn-fill">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03ZM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.956 2.418-2.157 2.418Zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.947 2.418-2.157 2.418Z" />
+              </svg> send DM </a>
+            <a href="https://discord.com/users/1369005951637655756" target="_blank" rel="noopener" class="dcbtn dcbtn-outline"> view profile </a>
+          </div>
+        </div>
+      </section>
+      <!-- SERVER -->
+      <section class="card">
+        <div class="ch">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          <h2>join my server</h2>
+        </div>
+        <div class="server-row">
+          <img src="https://cdn.discordapp.com/icons/1466600504447467623/9d038058437470f259ad051e025b8a67.png?size=128" alt="Server icon" class="server-icon" onerror="this.style.background='#5865F2'" />
           <div>
-            <div class="dc-name">@planetkosii</div>
-            <div class="dc-id">ID: 1369005951637655756</div>
-            <div class="dc-online">
-              <span class="dc-dot"></span>
-              online
+            <div class="server-name">kosi's dev lounge</div>
+            <div class="server-online">
+              <span class="green-dot"></span>
+              <span id="memberCount">loading...</span>
             </div>
           </div>
         </div>
-        <div class="dc-btns">
-          <a href="https://discord.com/users/1369005951637655756" target="_blank" rel="noopener" class="dcbtn dcbtn-fill">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03ZM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.956 2.418-2.157 2.418Zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.947 2.418-2.157 2.418Z"/></svg>
-            send DM
+        <p class="server-desc">A community for developers, bot builders, and tech enthusiasts. Share projects, get help, and collaborate.</p>
+        <div class="feature-tags">
+          <span class="ftag">💬 general chat</span>
+          <span class="ftag">🤖 bot dev</span>
+          <span class="ftag">🎮 gaming</span>
+          <span class="ftag">🇿🇼 zimbabwe</span>
+        </div>
+        <a href="https://discord.gg/35eeBFeDVZ" target="_blank" rel="noopener" class="join-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg> join server → </a>
+      </section>
+      <!-- OTHER CONTACT -->
+      <section class="card">
+        <div class="ch">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="4" width="20" height="16" rx="2" />
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+          </svg>
+          <h2>other ways to reach me</h2>
+        </div>
+        <div class="contact-list">
+          <a href="mailto:planetkosi@gmail.com" class="ci">
+            <div class="ci-left">
+              <svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="2" y="4" width="20" height="16" rx="2" />
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+              </svg>
+              <div>
+                <div class="ci-label">email</div>
+                <div class="ci-sub">planetkosi@gmail.com</div>
+              </div>
+            </div>
+            <span class="ci-arrow">↗</span>
           </a>
-          <a href="https://discord.com/users/1369005951637655756" target="_blank" rel="noopener" class="dcbtn dcbtn-outline">
-            view profile
+          <a href="https://github.com/planetkosi" target="_blank" rel="noopener" class="ci">
+            <div class="ci-left">
+              <svg class="ci-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10Z" />
+              </svg>
+              <div>
+                <div class="ci-label">github</div>
+                <div class="ci-sub">@planetkosi</div>
+              </div>
+            </div>
+            <span class="ci-arrow">↗</span>
+          </a>
+          <a href="https://twitter.com/planetkosi" target="_blank" rel="noopener" class="ci">
+            <div class="ci-left">
+              <svg class="ci-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M4 4l11.733 16H20L8.267 4z" />
+                <path d="M4 20l6.768-6.768M17.232 6.768 20 4" stroke="currentColor" stroke-width="1.5" fill="none" />
+              </svg>
+              <div>
+                <div class="ci-label">twitter / x</div>
+                <div class="ci-sub">@planetkosi</div>
+              </div>
+            </div>
+            <span class="ci-arrow">↗</span>
           </a>
         </div>
-      </div>
-    </section>
-
-    <!-- SERVER -->
-    <section class="card">
-      <div class="ch">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        <h2>join my server</h2>
-      </div>
-      <div class="server-row">
-        <img src="https://cdn.discordapp.com/icons/1466600504447467623/9d038058437470f259ad051e025b8a67.png?size=128" alt="Server icon" class="server-icon" onerror="this.style.background='#5865F2'" />
-        <div>
-          <div class="server-name">kosi's dev lounge</div>
-          <div class="server-online"><span class="green-dot"></span><span id="memberCount">loading...</span></div>
+        <div class="tip">
+          <strong>💡 tip:</strong> I prefer detailed messages over quick "hi"s — include what you're building, your timeline, and how I can help. I usually reply within 24 hours.
         </div>
-      </div>
-      <p class="server-desc">A community for developers, bot builders, and tech enthusiasts. Share projects, get help, and collaborate.</p>
-      <div class="feature-tags">
-        <span class="ftag">💬 general chat</span>
-        <span class="ftag">🤖 bot dev</span>
-        <span class="ftag">🎮 gaming</span>
-        <span class="ftag">🇿🇼 zimbabwe</span>
-      </div>
-      <a href="https://discord.gg/35eeBFeDVZ" target="_blank" rel="noopener" class="join-btn">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        join server →
-      </a>
-    </section>
+      </section>
+      <footer>
+        <strong>kosi.dev</strong>
+        <span>·</span>
+        <span>building from Zimbabwe 🇿🇼</span>
+      </footer>
+    </div>
+    <script>
+      /* ── STARS ── */
+      (function() {
+        const c = document.getElementById('stars');
+        const ctx = c.getContext('2d');
+        let stars = [];
 
-    <!-- OTHER CONTACT -->
-    <section class="card">
-      <div class="ch">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-        <h2>other ways to reach me</h2>
-      </div>
-      <div class="contact-list">
-        <a href="mailto:planetkosi@gmail.com" class="ci">
-          <div class="ci-left">
-            <svg class="ci-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-            <div><div class="ci-label">email</div><div class="ci-sub">planetkosi@gmail.com</div></div>
-          </div>
-          <span class="ci-arrow">↗</span>
-        </a>
-        <a href="https://github.com/planetkosi" target="_blank" rel="noopener" class="ci">
-          <div class="ci-left">
-            <svg class="ci-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10Z"/></svg>
-            <div><div class="ci-label">github</div><div class="ci-sub">@planetkosi</div></div>
-          </div>
-          <span class="ci-arrow">↗</span>
-        </a>
-        <a href="https://twitter.com/planetkosi" target="_blank" rel="noopener" class="ci">
-          <div class="ci-left">
-            <svg class="ci-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4l11.733 16H20L8.267 4z"/><path d="M4 20l6.768-6.768M17.232 6.768 20 4" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
-            <div><div class="ci-label">twitter / x</div><div class="ci-sub">@planetkosi</div></div>
-          </div>
-          <span class="ci-arrow">↗</span>
-        </a>
-      </div>
-      <div class="tip">
-        <strong>💡 tip:</strong> I prefer detailed messages over quick "hi"s — include what you're building, your timeline, and how I can help. I usually reply within 24 hours.
-      </div>
-    </section>
-
-    <footer>
-      <strong>kosi.dev</strong>
-      <span>·</span>
-      <span>building from Zimbabwe 🇿🇼</span>
-    </footer>
-  </div>
-
-  <script>
-    /* ── STARS ── */
-    (function(){
-      const c = document.getElementById('stars');
-      const ctx = c.getContext('2d');
-      let stars = [];
-      function resize(){
-        c.width = innerWidth; c.height = innerHeight;
-        const n = Math.floor(c.width*c.height/4500);
-        stars = Array.from({length:n},()=>({
-          x:Math.random()*c.width, y:Math.random()*c.height,
-          r:Math.random()*1.2+0.15, o:Math.random()*0.5+0.08,
-          s:Math.random()*0.25+0.04, p:Math.random()*Math.PI*2
-        }));
-      }
-      function draw(t){
-        ctx.clearRect(0,0,c.width,c.height);
-        for(const s of stars){
-          const pulse=Math.sin(t*0.001*s.s+s.p)*0.18;
-          ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-          ctx.fillStyle=`rgba(255,255,255,${Math.max(0,s.o+pulse)})`;
-          ctx.fill();
+        function resize() {
+          c.width = innerWidth;
+          c.height = innerHeight;
+          const n = Math.floor(c.width * c.height / 4500);
+          stars = Array.from({
+            length: n
+          }, () => ({
+            x: Math.random() * c.width,
+            y: Math.random() * c.height,
+            r: Math.random() * 1.2 + 0.15,
+            o: Math.random() * 0.5 + 0.08,
+            s: Math.random() * 0.25 + 0.04,
+            p: Math.random() * Math.PI * 2
+          }));
         }
+
+        function draw(t) {
+          ctx.clearRect(0, 0, c.width, c.height);
+          for (const s of stars) {
+            const pulse = Math.sin(t * 0.001 * s.s + s.p) * 0.18;
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255,255,255,${Math.max(0,s.o+pulse)})`;
+            ctx.fill();
+          }
+          requestAnimationFrame(draw);
+        }
+        resize();
+        addEventListener('resize', resize);
         requestAnimationFrame(draw);
+      })();
+      /* ── THEME ── */
+      const root = document.documentElement;
+      const btn = document.getElementById('themeBtn');
+
+      function applyTheme(t) {
+        root.dataset.theme = t;
+        localStorage.setItem('kosi-theme', t);
+        btn.textContent = t === 'dark' ? '☀️' : '🌙';
       }
-      resize(); addEventListener('resize',resize);
-      requestAnimationFrame(draw);
-    })();
-
-    /* ── THEME ── */
-    const root = document.documentElement;
-    const btn = document.getElementById('themeBtn');
-    function applyTheme(t){
-      root.dataset.theme = t;
-      localStorage.setItem('kosi-theme',t);
-      btn.textContent = t==='dark' ? '☀️' : '🌙';
-    }
-    btn.addEventListener('click',()=> applyTheme(root.dataset.theme==='dark'?'light':'dark'));
-    const saved = localStorage.getItem('kosi-theme');
-    applyTheme(saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
-
-    /* ── CARD GLOW ── */
-    if(!matchMedia('(prefers-reduced-motion:reduce)').matches){
-      document.querySelectorAll('.card').forEach(c=>{
-        c.addEventListener('mousemove',e=>{
-          const r=c.getBoundingClientRect();
-          c.style.setProperty('--mx',(e.clientX-r.left)+'px');
-          c.style.setProperty('--my',(e.clientY-r.top)+'px');
+      btn.addEventListener('click', () => applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark'));
+      const saved = localStorage.getItem('kosi-theme');
+      applyTheme(saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+      /* ── CARD GLOW ── */
+      if (!matchMedia('(prefers-reduced-motion:reduce)').matches) {
+        document.querySelectorAll('.card').forEach(c => {
+          c.addEventListener('mousemove', e => {
+            const r = c.getBoundingClientRect();
+            c.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+            c.style.setProperty('--my', (e.clientY - r.top) + 'px');
+          });
         });
-      });
-    }
-
-    /* ── SERVER MEMBER COUNT ── */
-    const mc = document.getElementById('memberCount');
-    mc.textContent = (Math.floor(Math.random()*40)+15) + ' members online';
-  </script>
-</body>
+      }
+      /* ── SERVER MEMBER COUNT ── */
+      const mc = document.getElementById('memberCount');
+      mc.textContent = (Math.floor(Math.random() * 40) + 15) + ' members online';
+    </script>
+  </body>
 </html>
